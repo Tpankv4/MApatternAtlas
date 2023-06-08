@@ -12,6 +12,23 @@
     <input matInput placeholder="Type to filter" [formControl]="filter">
     <mat-icon matSuffix>filter_list</mat-icon>
   </mat-form-field>
+  
+  <mat-form-field class="test-class-c" appearance="outline" [floatLabel]="'always'" *ngIf="graphVisible">
+	<mat-label>Select an Algorithm</mat-label>
+	<mat-select [(value)]="selectedAlgorithm" (selectionChange)="addAlgoPatterns()">
+		<mat-option>None</mat-option>
+		<mat-option value="QuantumAnnealing">Quantum Annealing</mat-option>
+		<mat-option value="ReverseAnnealing">Reverse Annealing</mat-option>
+		<mat-option value="QuantumApproximateOptimizationAlgorithm">Quantum Approximate Optimization Algorithm</mat-option>
+		<mat-option value="DeutschAlgorithm">Deutsch Algorithm</mat-option>
+		<mat-option value="test">test</mat-option>
+	</mat-select>
+  </mat-form-field>
+  
+  <button class="action-button-with-margin" (click)="showAlgoPatterns()" *ngIf="graphVisible"
+          color="accent" mat-raised-button>
+    <i class="material-icons">zoom_in</i> ShowAlgorithm
+  </button>
   <button class="action-button-with-margin" (click)="reloadGraph()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
     <i class="material-icons">autorenew</i> Reformat
@@ -42,7 +59,8 @@
                 patterns: this.patterns, edges: this.patternLinks, copyOfLinks: [],
                 patternLanguage: this.patternLanguage, patternContainer: null, patternLanguages: []
             }" (addedEdge)="handleLinkAddedInGraphEditor($event)" (removedEdge)="handleLinkRemovedInGraphEditor($event)"
-                    [showPatternLanguageName]="false">
+                    [showPatternLanguageName]="false" [AlgorithmData] = "AlgoData" [showAlgoPopups] = "showAlgoPopups" 
+					(resetAlgorithmValue)="resetSelectedAlgorithm()" (resetButtonClicked) = "resetButtonValue($event)">
   </pp-graph-display>
 
 </div>

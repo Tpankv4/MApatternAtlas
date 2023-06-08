@@ -6,6 +6,7 @@ import { D3Service } from '../../../graph/service/d3.service';
 import { NetworkLink } from '../../model/network-link.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePatternRelationComponent } from '../create-pattern-relation/create-pattern-relation.component';
+import { DialoggraphComponent } from '../dialoggraph/dialoggraph.component';
 import { PatternContainer } from '../../model/hal/pattern-container.model';
 import PatternLanguage from '../../model/hal/pattern-language.model';
 import { EdgeWithType, PatternRelationDescriptorService } from '../../service/pattern-relation-descriptor.service';
@@ -15,6 +16,7 @@ import { DraggedEdge, edgeId } from '@ustutt/grapheditor-webcomponent/lib/edge';
 import Pattern from '../../model/hal/pattern.model';
 import { GraphInputData } from '../../model/graph-input-data.interface';
 import { PatternService } from '../../service/pattern.service';
+import { AlgoStateService } from '../../service/algo-state.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { PatternResponse } from '../../model/hal/pattern-response.interface';
@@ -39,6 +41,8 @@ export class GraphNode {
   y: number;
   patternLanguageId: string;
   uri: string;
+  
+  level: number;
 }
 
 @Component({
@@ -93,6 +97,15 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   private relations: Edge[];
   viewRelationsOfPattern: Edge[];
   selectedPattern: Pattern;
+  
+  @Input() AlgorithmData = [];
+  @Input() showAlgoPopups: boolean;
+  @Output() resetAlgorithmValue = new EventEmitter<void>();
+  @Output() resetButtonClicked = new EventEmitter<boolean>();
+  cpattern: any;
+  edgeInformation = [];
+  edgesToReverse = [];
+  waitForNativeGraph = false;
 
   constructor(private cdr: ChangeDetectorRef,
               private d3Service: D3Service,
@@ -105,6 +118,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
               private graphDataService: GraphDataService,
               private activatedRoute: ActivatedRoute,
               private configService: PatternAtlasUiRepositoryConfigurationService,
+			  private algoStateService: AlgoStateService,
               private router: Router) {
   }
 
@@ -184,10 +198,12 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
       return false;
     };
     this.getGraph();
+	
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data != null) {
+	  console.log(changes);
       this.isLoading = true;
       this.initData();
       this.getGraph();
@@ -197,6 +213,22 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
         this.triggerRerendering(true);
       });
     }
+	if((this.AlgorithmData != null)||(this.AlgorithmData != undefined)){
+		if(this.AlgorithmData.length > 0){
+			if(this.graphNativeElement != undefined){
+				console.log("inside ngonchanges in graph-display component");
+				this.generateEdgeInformation();
+				this.showAlgorithmNode();
+				//this.resetButtonClicked.emit();
+			}else{
+				this.waitForNativeGraph = true;
+			}
+		}else{
+			if(this.graphNativeElement != undefined){
+				this.backgroundClicked();
+			}
+		}
+	}
   }
 
   /**
@@ -322,10 +354,12 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   backgroundClicked() {
     this.highlightedNodeIds = [];
     this.highlightedEdgeIds = [];
+	this.nodes.forEach(node => node.level = undefined);
     this.clickedNodeId = null;
     this.selectedPattern = null;
     this.graphNativeElement.completeRender();
     this.patternClicked = false;
+	this.resetAlgorithmValue.emit();
   }
 
   public updateSideMenu() {
@@ -442,20 +476,189 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
     }
     this.triggerRerendering();
     this.graphNativeElement.zoomToBoundingBox(true);
+	
+	// falls storage beim initialisieren einen Werte enthaelt
+	if(this.waitForNativeGraph){
+		console.log("hier rein falls etwas im storage ist");
+		this.waitForNativeGraph = false;
+		this.generateEdgeInformation();
+		this.showAlgorithmNode();
+	}
 
   }
 
   private addNewPatternNodeToGraph(pat: Pattern, index: number) {
     this.graphNativeElement.addNode(GraphDisplayComponent.mapPatternsToNodes([pat], index)[0]);
   }
+  
+  private generateEdgeInformation(): void {
+    this.AlgorithmData.forEach(nodeid => {
+		this.cpattern = this.patterns.find(pat => pat.id === nodeid);
+		this.patternService.getPatternByUrl(this.cpattern._links.self.href).pipe(
+			switchMap((pattern: PatternResponse) => {
+				return this.patternRelationDescriptionService.getEdgesForPattern(pattern);
+			})).subscribe(edges => {
+				this.edgeInformation.push({
+					edges: edges,
+					nodeid: nodeid,
+				});
+				//this.cdr.detectChanges();
+			});
+			
+	  });
+  }
+  
+  private showAlgorithmNode(){
+	  console.log("inside showAlgorithmNode");
+	  this.highlightedEdgeIds = [];
+	  this.highlightedNodeIds = [];
+	  //this.edgeInformation = [];
+	  this.edgesToReverse = [];
+      this.AlgorithmData.forEach(element => {
+		this.highlightedNodeIds.push(element);
+		const outgoingLinks = Array.from(this.graph.nativeElement.getEdgesByTarget(element));
+		const ingoingLinks = Array.from(this.graph.nativeElement.getEdgesBySource(element));
+		const tooManyEdges = [].concat(outgoingLinks).concat(ingoingLinks);
+		this.highlightedEdgeIds = this.highlightedEdgeIds.concat(tooManyEdges);
+		
+		/*
+		this.cpattern = this.patterns.find(pat => pat.id === element);
+		this.patternService.getPatternByUrl(this.cpattern._links.self.href).pipe(
+			switchMap((pattern: PatternResponse) => {
+				return this.patternRelationDescriptionService.getEdgesForPattern(pattern);
+			})).subscribe(edges => {
+				this.edgeInformation.push({
+					edges: edges,
+					nodeid: element,
+				});
+			});
+			*/
+	  });
+	  console.log("edgeinfos");
+	  console.log(this.edgeInformation);
+	  this.highlightedEdgeIds = this.highlightedEdgeIds.filter( edge => (this.highlightedNodeIds.includes(edge["source"])) && (this.highlightedNodeIds.includes(edge["target"])));
+	  this.highlightedEdgeIds = this.highlightedEdgeIds.filter((item, index) => this.highlightedEdgeIds.indexOf(item) === index);
+	  
+	  this.edgesToReverse = JSON.parse(JSON.stringify(this.highlightedEdgeIds));
+	  /*
+	  currentEdges2.forEach(edge => {
+		  console.log(edge);
+		  //undefined???
+	      console.log(edgeInformation[0]);
+		  edgeInformation.forEach(node => {
+			  console.log(node);
+			  if((node.nodeid == edge.source) || (node.nodeid == edge.target)) {
+				  console.log("komm ich hier rein?");
+				  node.edges.forEach(edgedescription => {
+					  if(edgedescription.edge.type == "refines") {
+						  console.log("swap here");
+						  let oldsource = edge.source;
+						  //edge["source"] = edge["target"];
+						  //edge["target"] = oldsource;
+						  edge.source = edge.target;
+						  edge.target = oldsource;
+					  }
+				  });
+			  }
+		  });
+	  });
+	  
+	  console.log(currentEdges2);
+	  */
+	  
+	  /*
+	  //tests hier
+	  let tempnodes = [].concat(this.highlightedNodeIds);
+	  let tempedges = [].concat(this.highlightedEdgeIds);
+	  console.log(this.highlightedEdgeIds);
+	  let levelgraph = [];
+	  for (let i = 1; i <= this.highlightedNodeIds.length; i++){
+		let nodesToRemove = [];  
+		console.log("in for schleife");
+		console.log(tempnodes);
+		console.log(tempedges);
+		console.log(i);
+		tempnodes.forEach( node => {
+			let hasnoincomingedge = true;
+			tempedges.forEach( edge => {
+				if(edge["target"] == node){
+					hasnoincomingedge = false;
+				}
+			});
+			if(hasnoincomingedge){
+				levelgraph.push({nodeid: node, level: i});
+				nodesToRemove.push(node);
+			}
+		});
+		nodesToRemove.forEach( node => {
+			tempedges = tempedges.filter( edge => edge["source"] != node);
+			let index = tempnodes.indexOf(node);
+			tempnodes.splice(index,1);
+		});
+	  }
+	  //add remaining nodes (most likely because of cyclic dependencies)
+	  tempnodes.forEach(node => levelgraph.push({nodeid: node, level: 100}));
+	  console.log("Levelgraph:");
+	  console.log(levelgraph);
+	  this.nodes.forEach(node => {
+		  levelgraph.forEach( lnode => {
+			  if(lnode.nodeid == node.id){
+				  node.level = lnode.level;
+				  lnode.actualNode = node;
+			  }
+		  });
+	  });
+	  */
+	  this.highlightedEdgeIds = this.highlightedEdgeIds.map( edge => edge["id"] ? edge["id"] : edgeId(edge["id"]));
+	  console.log("hey edges überprüfen");
+	  console.log(this.edgesToReverse);
+	  
+      this.triggerRerendering();
+	  if(this.showAlgoPopups){
+		this.openGraphDialog();
+	  }
+  }
+  
+  private openGraphDialog(){
+	  //deepcopy
+	  const currentNodes = JSON.parse(JSON.stringify(this.highlightedNodeIds));
+	  const nodecopy = JSON.parse(JSON.stringify(this.nodes));
+	  
+	  const dialogRef = this.matDialog.open(DialoggraphComponent, {
+			data: {
+		    nodes: nodecopy,
+			highlightedNodes: currentNodes,
+			edges: this.edgesToReverse,
+			edgeInformation: this.edgeInformation,
+		},
+		height: '70%',
+		width: '70%'
+	  });
+	  
+	  dialogRef.afterClosed().subscribe(result => {
+		  if(result != null) {
+			  console.log(result);
+			  this.resetButtonClicked.emit(true);
+			  this.router.navigate(['./../..', 'pattern-languages', result.patternLanguageId, result.uri], { relativeTo: this.activatedRoute});
+		  }else{
+			  this.resetButtonClicked.emit(false);
+		  }
+		  console.log("closed dialog");
+	  });
+  }
 
   private showInfoForClickedNode(node): void {
 
     this.clickedNodeId = node.id;
+	console.log(node);
+	console.log(node.id);
+	console.log(node.title);
     const outgoingLinks = Array.from(this.graph.nativeElement.getEdgesByTarget(node.id));
     const ingoingLinks = Array.from(this.graph.nativeElement.getEdgesBySource(node.id));
 
+    console.log([].concat(outgoingLinks).concat(ingoingLinks));
     this.highlightedEdgeIds = [].concat(outgoingLinks).concat(ingoingLinks).map((edge) => edge.id ? edge.id : edgeId(edge));
+	//console.log(this.highlightedEdgeIds);
     const outgoingNodeIds: string[] = outgoingLinks.map(it => it['source']);
     const ingoingNodeIds: string[] = ingoingLinks.map(it => it['target']);
 
