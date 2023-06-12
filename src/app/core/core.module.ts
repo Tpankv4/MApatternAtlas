@@ -97,6 +97,7 @@ import { EditUrlDialogComponent } from './component/edit-url-dialog/edit-url-dia
 import { FeatureToggleDialogComponent } from './component/feature-toggle-dialog/feature-toggle-dialog.component';
 import { PatternAtlasUiFeatureToggleModule } from './directives/pattern-atlas-ui-feature-toggle.module';
 import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.component';
+import { CreateAlgorithmComponent } from './component/create-algorithm/create-algorithm.component';
 
 @NgModule({
   imports: [
@@ -205,7 +206,8 @@ import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.compon
     DeleteConfirmationDialogComponent,
     EditUrlDialogComponent,
     FeatureToggleDialogComponent,
-    DialoggraphComponent
+    DialoggraphComponent,
+    CreateAlgorithmComponent
   ],
   entryComponents: [
     DefaultPlRendererComponent,
@@ -224,7 +226,8 @@ import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.compon
     CommentDialogComponent,
     DiscussDialogComponent,
     FeatureToggleDialogComponent,
-	DialoggraphComponent
+	DialoggraphComponent,
+	CreateAlgorithmComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -7,6 +7,7 @@ import { NetworkLink } from '../../model/network-link.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePatternRelationComponent } from '../create-pattern-relation/create-pattern-relation.component';
 import { DialoggraphComponent } from '../dialoggraph/dialoggraph.component';
+import { CreateAlgorithmComponent } from '../create-algorithm/create-algorithm.component';
 import { PatternContainer } from '../../model/hal/pattern-container.model';
 import PatternLanguage from '../../model/hal/pattern-language.model';
 import { EdgeWithType, PatternRelationDescriptorService } from '../../service/pattern-relation-descriptor.service';
@@ -100,8 +101,10 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   
   @Input() AlgorithmData = [];
   @Input() showAlgoPopups: boolean;
+  @Input() addAlgorithmDialog: boolean;
   @Output() resetAlgorithmValue = new EventEmitter<void>();
   @Output() resetButtonClicked = new EventEmitter<boolean>();
+  @Output() addedAlgorithm = new EventEmitter<any>();
   cpattern: any;
   edgeInformation = [];
   edgesToReverse = [];
@@ -213,6 +216,9 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
         this.triggerRerendering(true);
       });
     }
+	if(this.addAlgorithmDialog){
+		this.openCreateAlgorithm();
+	}
 	if((this.AlgorithmData != null)||(this.AlgorithmData != undefined)){
 		if(this.AlgorithmData.length > 0){
 			if(this.graphNativeElement != undefined){
@@ -644,6 +650,27 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 			  this.resetButtonClicked.emit(false);
 		  }
 		  console.log("closed dialog");
+	  });
+  }
+  
+  private openCreateAlgorithm() {
+	  const dialogRef2 = this.matDialog.open(CreateAlgorithmComponent, {
+			data: {
+		    patterns: this.patterns,
+		},
+	  });
+	  
+	  dialogRef2.afterClosed().subscribe(result => {
+		  if((result != null) && (result.name != undefined)) {
+			  let newAlgorithmPatternIds = [];
+			  result.patterns.forEach(pattern => {
+				  newAlgorithmPatternIds.push(pattern.id);
+			  });
+			  this.addedAlgorithm.emit({name: result.name, data: newAlgorithmPatternIds});
+		  }else{
+			  this.addedAlgorithm.emit(null);
+		  }
+		  console.log("closed creation dialog");
 	  });
   }
 

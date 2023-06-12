@@ -1,0 +1,21 @@
+<div mat-dialog-content>
+	<mat-form-field>
+		<mat-label>Algorithm Name</mat-label>
+        <input matInput [(ngModel)]="name">
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Select Patterns</mat-label>
+		<mat-select [(value)]="res" multiple>
+			<mat-option *ngFor="let pattern of patterns" [value]="pattern">{{pattern.name}}</mat-option>
+		</mat-select>
+	</mat-form-field>
+</div>
+<div mat-dialog-actions>
+	<button class="action-button-with-margin" (click)="closeDialog()" color="accent" mat-raised-button>
+		<i class="material-icons"></i> createAlgorithm
+	</button>
+	<button mat-dialog-close class="action-button-with-margin" mat-raised-button >
+		<i class="material-icons"></i> close
+	</button>
+</div>
+

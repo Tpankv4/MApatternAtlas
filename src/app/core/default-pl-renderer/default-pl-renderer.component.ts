@@ -59,6 +59,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   selectedAlgorithm = 'None';
   AlgorithmDataIds = [];
   showAlgoPopups = false;
+  addAlgorithmDialog = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private cdr: ChangeDetectorRef,
@@ -97,7 +98,8 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   resetSelectedAlgorithm(){
-	  this.selectedAlgorithm = undefined;
+	  // auf undefined setzen falls wieder probleme dammit auftauchen
+	  this.selectedAlgorithm = 'None';
   }
   
   resetButtonValue(value){
@@ -108,6 +110,17 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 		  this.algoStateService.clearAlgoState();
 	  }
 	  this.showAlgoPopups = false;
+  }
+  
+  openAddPatternDialog(){
+	  this.addAlgorithmDialog = true;
+  }
+  
+  addNewAlgorithm(newalgorithm){
+	  if(newalgorithm != null){
+		  this.AlgorithmDataIds.push(newalgorithm);
+	  }
+	  this.addAlgorithmDialog = false;
   }
   
   initializeAlgorithmPatternIds() {

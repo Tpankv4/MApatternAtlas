@@ -31,7 +31,11 @@
   
   <button class="action-button-with-margin" (click)="showAlgoPatterns()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
-    <i class="material-icons">zoom_in</i> ShowAlgorithm
+    <i class="material-icons">zoom_in</i> Show selected Algorithm
+  </button>
+  <button class="action-button-with-margin" (click)="openAddPatternDialog()" *ngIf="graphVisible"
+          color="accent" mat-raised-button>
+    <i class="material-icons">add_box</i> Add Algorithm
   </button>
   <button class="action-button-with-margin" (click)="reloadGraph()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
@@ -64,7 +68,8 @@
                 patternLanguage: this.patternLanguage, patternContainer: null, patternLanguages: []
             }" (addedEdge)="handleLinkAddedInGraphEditor($event)" (removedEdge)="handleLinkRemovedInGraphEditor($event)"
                     [showPatternLanguageName]="false" [AlgorithmData] = "AlgoData" [showAlgoPopups] = "showAlgoPopups" 
-					(resetAlgorithmValue)="resetSelectedAlgorithm()" (resetButtonClicked) = "resetButtonValue($event)">
+					(resetAlgorithmValue)="resetSelectedAlgorithm()" (resetButtonClicked) = "resetButtonValue($event)" 
+					(addedAlgorithm) = "addNewAlgorithm($event)" [addAlgorithmDialog] = "addAlgorithmDialog">
   </pp-graph-display>
 
 </div>
