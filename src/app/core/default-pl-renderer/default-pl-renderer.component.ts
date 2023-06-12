@@ -111,20 +111,20 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   initializeAlgorithmPatternIds() {
-	  const QuantumAnnealingData = {name: "QuantumAnnealing", 
+	  const QuantumAnnealingData = {name: "Quantum Annealing", 
 	                                data: ["312bc9d3-26c0-40ae-b90b-56effd136c0d", "bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "482714a7-8409-4165-93fe-72b02c2ae99c", 
 							  "2229a430-fe92-4411-9d72-d10dd1d8da14", "3d1f3991-df47-4d42-8f9a-e6dcf4e3ccec"]};
 	  this.AlgorithmDataIds.push(QuantumAnnealingData);
-	  const ReverseAnnealingData = {name: "ReverseAnnealing",
+	  const ReverseAnnealingData = {name: "Reverse Annealing",
 	                                data: ["312bc9d3-26c0-40ae-b90b-56effd136c0d", "bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "482714a7-8409-4165-93fe-72b02c2ae99c", 
 	  "2229a430-fe92-4411-9d72-d10dd1d8da14", "3d1f3991-df47-4d42-8f9a-e6dcf4e3ccec", "dd15032b-ce2b-40b6-80ac-97623255b531", "bc795a9b-7977-4e01-b513-f9f5aba38aa7", 
 	  "b657ea73-63c0-4800-a69d-a91925e19ac6", "3ea9e187-e91b-4852-84eb-b35b5c480892"]};
 	  this.AlgorithmDataIds.push(ReverseAnnealingData);
-	  const Qaoa = {name: "QuantumApproximateOptimizationAlgorithm",
+	  const Qaoa = {name: "Quantum Approximate Optimization Algorithm",
 					data: ["bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "dd15032b-ce2b-40b6-80ac-97623255b531", "bc795a9b-7977-4e01-b513-f9f5aba38aa7", 
 	  "b657ea73-63c0-4800-a69d-a91925e19ac6", "3ea9e187-e91b-4852-84eb-b35b5c480892", "da93f915-7f4c-49df-99d0-80d91f26a337"]};
 	  this.AlgorithmDataIds.push(Qaoa);
-	  const Deutsch = {name: "DeutschAlgorithm",
+	  const Deutsch = {name: "Deutsch Algorithm",
 					   data: ["312bc9d3-26c0-40ae-b90b-56effd136c0d", "bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "482714a7-8409-4165-93fe-72b02c2ae99c", 
 	  "3d1f3991-df47-4d42-8f9a-e6dcf4e3ccec" ,"1cc7e9d6-ab37-412e-8afa-604a25de296e", "3f3fabf0-7fa7-4b43-a74a-46a7ac2c55ee", "d4f7c247-e2bb-4301-ad06-f758fa58f2dc", 
 	  "2229a430-fe92-4411-9d72-d10dd1d8da14"]};

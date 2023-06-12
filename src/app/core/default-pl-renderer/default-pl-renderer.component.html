@@ -16,12 +16,16 @@
   <mat-form-field class="test-class-c" appearance="outline" [floatLabel]="'always'" *ngIf="graphVisible">
 	<mat-label>Select an Algorithm</mat-label>
 	<mat-select [(value)]="selectedAlgorithm" (selectionChange)="addAlgoPatterns()">
-		<mat-option>None</mat-option>
+		<!--mat-option>None</mat-option>
 		<mat-option value="QuantumAnnealing">Quantum Annealing</mat-option>
 		<mat-option value="ReverseAnnealing">Reverse Annealing</mat-option>
 		<mat-option value="QuantumApproximateOptimizationAlgorithm">Quantum Approximate Optimization Algorithm</mat-option>
 		<mat-option value="DeutschAlgorithm">Deutsch Algorithm</mat-option>
-		<mat-option value="test">test</mat-option>
+		<mat-option value="test">test</mat-option-->
+		<mat-option>None</mat-option>
+		<mat-option *ngFor="let algorithm of AlgorithmDataIds" [value]="algorithm.name">
+            {{algorithm.name}}
+        </mat-option>
 	</mat-select>
   </mat-form-field>
   
