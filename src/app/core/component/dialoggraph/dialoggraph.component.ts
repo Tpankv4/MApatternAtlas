@@ -22,6 +22,7 @@ export class DialoggraphComponent implements OnInit {
   highlightedNodes: any;
   edges: any;
   edgeInformation: any;
+  optionalIds: any;
 
   constructor(public dialogRef: MatDialogRef<DialoggraphComponent>,
              @Inject(MAT_DIALOG_DATA) public data) { 
@@ -31,6 +32,7 @@ export class DialoggraphComponent implements OnInit {
           this.edges = data.edges;
           this.edgeInformation = data.edgeInformation;
 		  this.highlightedNodes = data.highlightedNodes;
+		  this.optionalIds = data.optionalNodeIds;
 		  
 		  // set level for each node
 		  /*
@@ -46,7 +48,6 @@ export class DialoggraphComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
   }
   
   close(openAgain: any){
@@ -249,16 +250,17 @@ export class DialoggraphComponent implements OnInit {
       this.graphElement.setEdges(this.edges);
 	  
 	  // optionale patterns müssen irgendwo gespeichert werden!
-	  let optionalNodeIds = ["3ea9e187-e91b-4852-84eb-b35b5c480892"];
-	  
-	  this.graphElement.setNodeClass = (className, node) => {
-      if (optionalNodeIds.length > 0) {
-        if (className === 'optional-node') {
-          return optionalNodeIds.includes(node.id as string);
-        }
-      }
-      return false;
-    };
+	  const optionalNodeIds = this.optionalIds;
+	  if((optionalNodeIds != undefined)) {
+		  this.graphElement.setNodeClass = (className, node) => {
+		      if (optionalNodeIds.length > 0) {
+			      if (className === 'optional-node') {
+                      return optionalNodeIds.includes(node.id as string);
+                  }
+              }
+              return false;
+          };
+	  }
 	  
   }
 }

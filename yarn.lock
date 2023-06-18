@@ -6020,6 +6020,11 @@ katex@^0.12.0:
   dependencies:
     commander "^2.19.0"
 
+keyword-extractor@0.0.25:
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/keyword-extractor/-/keyword-extractor-0.0.25.tgz#b791bf8cdae4d94abac33d3d2939334e2194fc6b"
+  integrity sha512-OpsjHSrHMheOEm/K5FQhkXV2wALqFemeI+yub/k2K5suhmodw7wM0RhuHHkvOKJp6m+LdKp5sVKFYf6ZtSFhrA==
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/killable/-/killable-1.0.1.tgz"

@@ -9,6 +9,16 @@
 			<mat-option *ngFor="let pattern of patterns" [value]="pattern">{{pattern.name}}</mat-option>
 		</mat-select>
 	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Select Optional Patterns</mat-label>
+		<mat-select [(value)]="opt" multiple>
+			<mat-option *ngFor="let pattern of patterns" [value]="pattern">{{pattern.name}}</mat-option>
+		</mat-select>
+	</mat-form-field>
+	<mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
+		<mat-label>Input the known Information</mat-label>
+		<textarea matInput placeholder="Type in information" [formControl]="filter"></textarea>
+  </mat-form-field>
 </div>
 <div mat-dialog-actions>
 	<button class="action-button-with-margin" (click)="closeDialog()" color="accent" mat-raised-button>
@@ -16,6 +26,9 @@
 	</button>
 	<button mat-dialog-close class="action-button-with-margin" mat-raised-button >
 		<i class="material-icons"></i> close
+	</button>
+	<button class="action-button-with-margin" (click)="extractInformation()"mat-raised-button >
+		<i class="material-icons"></i> start textmatching
 	</button>
 </div>
 

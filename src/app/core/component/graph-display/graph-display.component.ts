@@ -99,7 +99,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   viewRelationsOfPattern: Edge[];
   selectedPattern: Pattern;
   
-  @Input() AlgorithmData = [];
+  @Input() AlgorithmData: any;
   @Input() showAlgoPopups: boolean;
   @Input() addAlgorithmDialog: boolean;
   @Output() resetAlgorithmValue = new EventEmitter<void>();
@@ -498,7 +498,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   }
   
   private generateEdgeInformation(): void {
-    this.AlgorithmData.forEach(nodeid => {
+    this.AlgorithmData[0].data.forEach(nodeid => {
 		this.cpattern = this.patterns.find(pat => pat.id === nodeid);
 		this.patternService.getPatternByUrl(this.cpattern._links.self.href).pipe(
 			switchMap((pattern: PatternResponse) => {
@@ -520,7 +520,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	  this.highlightedNodeIds = [];
 	  //this.edgeInformation = [];
 	  this.edgesToReverse = [];
-      this.AlgorithmData.forEach(element => {
+  this.AlgorithmData[0].data.forEach(element => {
 		this.highlightedNodeIds.push(element);
 		const outgoingLinks = Array.from(this.graph.nativeElement.getEdgesByTarget(element));
 		const ingoingLinks = Array.from(this.graph.nativeElement.getEdgesBySource(element));
@@ -636,6 +636,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 			highlightedNodes: currentNodes,
 			edges: this.edgesToReverse,
 			edgeInformation: this.edgeInformation,
+			optionalNodeIds: this.AlgorithmData[0].optional,
 		},
 		height: '70%',
 		width: '70%'
@@ -661,12 +662,20 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	  });
 	  
 	  dialogRef2.afterClosed().subscribe(result => {
-		  if((result != null) && (result.name != undefined)) {
+		  if((result != null) && (result.name != undefined)) {	  
 			  let newAlgorithmPatternIds = [];
 			  result.patterns.forEach(pattern => {
 				  newAlgorithmPatternIds.push(pattern.id);
+			  });	  
+			  // optional patterns have to be in both arrays!
+			  let newOptionalAlgorithmPatternIds = [];
+			  result.optional.forEach(optpattern => {
+				  newOptionalAlgorithmPatternIds.push(optpattern.id);
+				  if(!(newAlgorithmPatternIds.includes(optpattern.id))){
+					  newAlgorithmPatternIds.push(optpattern.id);
+				  }
 			  });
-			  this.addedAlgorithm.emit({name: result.name, data: newAlgorithmPatternIds});
+			  this.addedAlgorithm.emit({name: result.name, data: newAlgorithmPatternIds, optional: newOptionalAlgorithmPatternIds});
 		  }else{
 			  this.addedAlgorithm.emit(null);
 		  }
