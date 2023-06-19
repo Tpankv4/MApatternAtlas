@@ -41,6 +41,10 @@
           color="accent" mat-raised-button>
     <i class="material-icons">autorenew</i> Reformat
   </button>
+  <button class="action-button-with-margin" (click)="exportToJson()" *ngIf="graphVisible"
+          color="accent" mat-raised-button>
+    <i class="material-icons">save</i> testdownload
+  </button>
 </pp-action-button-bar>
 
 <mat-progress-spinner *ngIf="isLoadingPatternData" mode="indeterminate"></mat-progress-spinner>

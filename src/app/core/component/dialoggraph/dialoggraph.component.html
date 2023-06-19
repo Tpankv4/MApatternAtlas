@@ -1,3 +1,8 @@
+<ng-container>
+<button class="action-button-with-margin" (click)="openLink()" 
+          color="accent" mat-raised-button>
+    <i class="material-icons"></i> {{algoName}}
+</button>
 <network-graph #graphWrapper
     (onClickedNode)="handleNodeClickedEvent2($event)"
 	[ppGraphEventEmmiter]
@@ -123,3 +128,4 @@ data-link-handles="none" id="arrow">
 </defs>
 </svg>
 </network-graph>
+</ng-container>

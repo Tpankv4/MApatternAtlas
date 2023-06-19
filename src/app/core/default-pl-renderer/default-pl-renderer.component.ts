@@ -28,6 +28,9 @@ import { globals } from '../../globals';
 import { PatternRelationDescriptorDirection } from '../model/pattern-relation-descriptor-direction.enum';
 import { UiFeatures } from '../directives/pattern-atlas-ui-repository-configuration.service';
 
+import { saveAs } from "file-saver";
+import * as jsonData from '../../../assets/AlgoData.json';
+
 @Component({
   selector: 'pp-default-pl-renderer',
   templateUrl: './default-pl-renderer.component.html',
@@ -60,6 +63,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   AlgorithmDataIds = [];
   showAlgoPopups = false;
   addAlgorithmDialog = false;
+  jdata: any = jsonData;
 
   constructor(private activatedRoute: ActivatedRoute,
               private cdr: ChangeDetectorRef,
@@ -73,6 +77,11 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
               private componentFactoryResolver: ComponentFactoryResolver,
 			  private algoStateService: AlgoStateService,
               private toasterService: ToasterService) {
+  }
+  
+  exportToJson() {
+	  let exportData = this.AlgorithmDataIds;
+	  return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
   }
 
   showAlgoPatterns() {
@@ -124,6 +133,16 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  this.addAlgorithmDialog = false;
   }
   
+  initializeAlgorithmPatternIds2(){
+	  //let url = './AlgoData.json';
+	  //this.http.get(url).subscribe(res => {
+		//  console.log(res);
+          //this.AlgorithmDataIds = res;
+    //});
+	console.log(this.jdata.default);
+	this.AlgorithmDataIds = this.jdata.default;
+  }
+  
   initializeAlgorithmPatternIds() {
 	  //optional patterns have to be in both arrays!
 	  const QuantumAnnealingData = {name: "Quantum Annealing", 
@@ -164,7 +183,8 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(filterSubscription);
 	
-	this.initializeAlgorithmPatternIds();
+	//this.initializeAlgorithmPatternIds();
+	this.initializeAlgorithmPatternIds2();
 	let state = this.algoStateService.getAlgoState();
 	if((state != null) && (state != undefined)){
 		this.selectedAlgorithm = state;
