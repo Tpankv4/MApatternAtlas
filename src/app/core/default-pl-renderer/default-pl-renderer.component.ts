@@ -80,6 +80,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   exportToJson() {
+	  this.algoStateService.saveAlgorithmData(this.AlgorithmDataIds);
 	  let exportData = this.AlgorithmDataIds;
 	  return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
   }
@@ -141,7 +142,12 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
           //this.AlgorithmDataIds = res;
     //});
 	console.log(this.jdata.default);
-	this.AlgorithmDataIds = this.jdata.default;
+	//this.AlgorithmDataIds = this.jdata.default;
+	if(this.algoStateService.getAlgorithmData() != null){
+		this.AlgorithmDataIds = this.algoStateService.getAlgorithmData();
+	}else{
+		this.AlgorithmDataIds = this.jdata.default;
+	}
   }
   
   initializeAlgorithmPatternIds() {
@@ -178,6 +184,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
+	//this.algoStateService.clearAlgorithmData();
     this.loadData();
     this.filter = new FormControl('');
     const filterSubscription = this.filter.valueChanges.subscribe((filterText: string) => {

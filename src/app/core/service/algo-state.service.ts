@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class AlgoStateService {
 
   private variableToStore: string = "AlgoState";
+  private variableForAlgoData: string = "AlgoDataVar";
   constructor() { }
   
   saveAlgoState(algorithm: string){
@@ -19,6 +20,19 @@ export class AlgoStateService {
 
   clearAlgoState() {
     localStorage.removeItem(this.variableToStore);
+  }
+  
+  saveAlgorithmData(data: any){
+	  localStorage.setItem(this.variableForAlgoData, JSON.stringify(data));
+  }
+  
+  getAlgorithmData(){
+	  let algodata = JSON.parse(localStorage.getItem(this.variableForAlgoData));
+	  return algodata;
+  }
+  
+  clearAlgorithmData() {
+    localStorage.removeItem(this.variableForAlgoData);
   }
 
   cleanAll() {
