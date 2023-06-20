@@ -23,6 +23,8 @@ export class DialoggraphComponent implements OnInit {
   edges: any;
   edgeInformation: any;
   optionalIds: any;
+  algoName: string;
+  href: string;
 
   constructor(public dialogRef: MatDialogRef<DialoggraphComponent>,
              @Inject(MAT_DIALOG_DATA) public data) { 
@@ -33,6 +35,8 @@ export class DialoggraphComponent implements OnInit {
           this.edgeInformation = data.edgeInformation;
 		  this.highlightedNodes = data.highlightedNodes;
 		  this.optionalIds = data.optionalNodeIds;
+		  this.algoName = data.name;
+		  this.href = data.href;
 		  
 		  // set level for each node
 		  /*
@@ -48,6 +52,12 @@ export class DialoggraphComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+  
+  openLink(){
+	  let url = this.href;
+	  //let url = "https://platform.planqk.de/algorithms/786e1ff5-991e-428d-a538-b8b99bc3d175/";
+	  window.open(url, '_blank');
   }
   
   close(openAgain: any){

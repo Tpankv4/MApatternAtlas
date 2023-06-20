@@ -6,6 +6,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import * as keyextract from 'keyword-extractor/lib/keyword_extractor';
 
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'pp-create-algorithm',
   templateUrl: './create-algorithm.component.html',
@@ -19,12 +21,16 @@ export class CreateAlgorithmComponent implements OnInit {
   name: string;
   filter: FormControl;
   keyword_extractor: any;
+  planqkref: string;
+  
+  infos: any;
   
   extractedAlgorithmInformation = []; //array of arrays with extracted keywords
   
   //todo: form control!
   
   constructor(public dialogRef: MatDialogRef<CreateAlgorithmComponent>,
+              private http: HttpClient,
              @Inject(MAT_DIALOG_DATA) public data) {
 				 this.patterns = data.patterns;
   }
@@ -32,6 +38,14 @@ export class CreateAlgorithmComponent implements OnInit {
   ngOnInit(): void {
 	  this.filter = new FormControl('');
 	  
+	  let href = "https://platform.planqk.de/qc-catalog/algorithms/fae60bca-d2b6-4aa2-88b7-58caace34179";
+	  this.http.get(href).subscribe(data => {
+		  this.infos = data;
+	  });
+	  
+  }
+  
+  extractInformation(){
 	  this.keyword_extractor = keyextract;
 	  const textToExtract = "The Deutsch algorithm (named after David Deutsch [1]), though having little to no practical use, was the first quantum algorithm to have a proven speed-up compared to any classical method. The well-known Deutsch-Josza algorithm [2] is an extension of this algorith, which generalizes the problem in order to achieve a super-exponential speed-up.";
 	  const textToExtract2 = "Quantum Annealing (QA) is a metaheuristic, which can be used for solving optimization problems or sampling from quantum distributions. At D-Wave Systems, this heuristic is implemented in hardware (so called quantum annealer), which takes the problem in form of a Quadratic Unconstrained Binary Optimization (QUBO) or Ising Model as input.";
@@ -51,9 +65,7 @@ export class CreateAlgorithmComponent implements OnInit {
 	  console.log(extraction_result);
 	  this.extractedAlgorithmInformation.push({name: textoftexts.name, keywords: extraction_result});
 	  });
-  }
-  
-  extractInformation(){
+	  
 	  const extraction_result_input =
 	      this.keyword_extractor.extract(this.filter.value,{
 			  language:"english",
@@ -69,11 +81,12 @@ export class CreateAlgorithmComponent implements OnInit {
 		  similarites.push({name: keywords.name, matchingkeywords: similarKeywords});
 	  });
 	  console.log(similarites);
+	  //console.log(this.infos);
   }
   
   closeDialog() {
 	  if(this.res.length > 0){
-		  const result = { name: this.name, patterns: this.res , optional: this.opt};
+		  const result = { name: this.name, patterns: this.res , optional: this.opt, href: this.planqkref};
 		  this.dialogRef.close(result);
 	  } else {
 		  alert("no patterns selected!");

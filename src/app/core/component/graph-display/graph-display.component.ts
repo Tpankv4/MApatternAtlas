@@ -629,6 +629,10 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	  //deepcopy
 	  const currentNodes = JSON.parse(JSON.stringify(this.highlightedNodeIds));
 	  const nodecopy = JSON.parse(JSON.stringify(this.nodes));
+	  let linkproperty = "";
+	  if(this.AlgorithmData[0].hasOwnProperty('href')){
+		  linkproperty = this.AlgorithmData[0].href;
+	  }
 	  
 	  const dialogRef = this.matDialog.open(DialoggraphComponent, {
 			data: {
@@ -637,9 +641,11 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 			edges: this.edgesToReverse,
 			edgeInformation: this.edgeInformation,
 			optionalNodeIds: this.AlgorithmData[0].optional,
+			name: this.AlgorithmData[0].name,
+			href: linkproperty,
 		},
 		height: '70%',
-		width: '70%'
+		width: '100%'
 	  });
 	  
 	  dialogRef.afterClosed().subscribe(result => {
@@ -675,7 +681,11 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 					  newAlgorithmPatternIds.push(optpattern.id);
 				  }
 			  });
-			  this.addedAlgorithm.emit({name: result.name, data: newAlgorithmPatternIds, optional: newOptionalAlgorithmPatternIds});
+			  let newhref = "";
+			  if((result.href != null) && (result.href != undefined)){
+				  newhref = result.href;
+			  }
+			  this.addedAlgorithm.emit({name: result.name, data: newAlgorithmPatternIds, optional: newOptionalAlgorithmPatternIds, href: newhref});
 		  }else{
 			  this.addedAlgorithm.emit(null);
 		  }

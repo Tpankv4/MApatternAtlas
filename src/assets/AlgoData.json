@@ -7,7 +7,8 @@
       "482714a7-8409-4165-93fe-72b02c2ae99c",
       "2229a430-fe92-4411-9d72-d10dd1d8da14",
       "3d1f3991-df47-4d42-8f9a-e6dcf4e3ccec"
-    ]
+    ],
+    "href": "https://platform.planqk.de/algorithms/786e1ff5-991e-428d-a538-b8b99bc3d175/"
   },
   {
     "name": "Reverse Annealing",
@@ -24,7 +25,8 @@
     ],
     "optional": [
       "3ea9e187-e91b-4852-84eb-b35b5c480892"
-    ]
+    ],
+    "href": "https://platform.planqk.de/algorithms/fadafc8b-5388-4768-8804-5fc22cf04a20/"
   },
   {
     "name": "Quantum Approximate Optimization Algorithm",
@@ -38,7 +40,8 @@
     ],
     "optional": [
       "3ea9e187-e91b-4852-84eb-b35b5c480892"
-    ]
+    ],
+    "href": "https://platform.planqk.de/algorithms/fae60bca-d2b6-4aa2-88b7-58caace34179/"
   },
   {
     "name": "Deutsch Algorithm",
@@ -51,7 +54,8 @@
       "3f3fabf0-7fa7-4b43-a74a-46a7ac2c55ee",
       "d4f7c247-e2bb-4301-ad06-f758fa58f2dc",
       "2229a430-fe92-4411-9d72-d10dd1d8da14"
-    ]
+    ],
+    "href": "https://platform.planqk.de/algorithms/533c90a5-5fbb-487b-b64d-a8f331aafb10/"
   },
   {
     "name": "test",
