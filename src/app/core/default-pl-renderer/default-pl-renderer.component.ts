@@ -30,6 +30,7 @@ import { UiFeatures } from '../directives/pattern-atlas-ui-repository-configurat
 
 import { saveAs } from "file-saver";
 import * as jsonData from '../../../assets/AlgoData.json';
+import { TextmatcherComponent } from '../component/textmatcher/textmatcher.component';
 
 @Component({
   selector: 'pp-default-pl-renderer',
@@ -58,9 +59,9 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   patternLinks: Array<UndirectedEdgeModel | DirectedEdgeModel>;
   subscriptions = new Subscription();
   
-  AlgoData = [];
+  AlgoData = [];                   // current selected algorithm data
   selectedAlgorithm = 'None';
-  AlgorithmDataIds = [];
+  AlgorithmDataIds = [];           // complete algorithm data
   showAlgoPopups = false;
   addAlgorithmDialog = false;
   jdata: any = jsonData;
@@ -77,6 +78,14 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
               private componentFactoryResolver: ComponentFactoryResolver,
 			  private algoStateService: AlgoStateService,
               private toasterService: ToasterService) {
+  }
+  
+  openTextmatcherDialog(){
+	  const dialogRef = this.dialog.open(TextmatcherComponent, {
+			data: {
+				data: this.AlgorithmDataIds,
+		    },
+	  });
   }
   
   exportToJson() {

@@ -98,6 +98,7 @@ import { FeatureToggleDialogComponent } from './component/feature-toggle-dialog/
 import { PatternAtlasUiFeatureToggleModule } from './directives/pattern-atlas-ui-feature-toggle.module';
 import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.component';
 import { CreateAlgorithmComponent } from './component/create-algorithm/create-algorithm.component';
+import { TextmatcherComponent } from './component/textmatcher/textmatcher.component';
 
 @NgModule({
   imports: [
@@ -207,7 +208,8 @@ import { CreateAlgorithmComponent } from './component/create-algorithm/create-al
     EditUrlDialogComponent,
     FeatureToggleDialogComponent,
     DialoggraphComponent,
-    CreateAlgorithmComponent
+    CreateAlgorithmComponent,
+    TextmatcherComponent
   ],
   entryComponents: [
     DefaultPlRendererComponent,
@@ -227,7 +229,8 @@ import { CreateAlgorithmComponent } from './component/create-algorithm/create-al
     DiscussDialogComponent,
     FeatureToggleDialogComponent,
 	DialoggraphComponent,
-	CreateAlgorithmComponent
+	CreateAlgorithmComponent,
+	TextmatcherComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

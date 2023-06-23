@@ -45,6 +45,10 @@
           color="accent" mat-raised-button>
     <i class="material-icons">save</i> testdownload
   </button>
+  <button class="action-button-with-margin" (click)="openTextmatcherDialog()" *ngIf="graphVisible"
+          color="accent" mat-raised-button>
+    <i class="material-icons"></i> open textmatcher
+  </button>
 </pp-action-button-bar>
 
 <mat-progress-spinner *ngIf="isLoadingPatternData" mode="indeterminate"></mat-progress-spinner>
