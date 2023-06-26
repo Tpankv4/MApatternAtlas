@@ -25,6 +25,10 @@ export class DialoggraphComponent implements OnInit {
   optionalIds: any;
   algoName: string;
   href: string;
+  
+  currentSetNodes: any;
+  currentlyHidden = false;
+  hideOptionalNodeText = "hide optional nodes";
 
   constructor(public dialogRef: MatDialogRef<DialoggraphComponent>,
              @Inject(MAT_DIALOG_DATA) public data) { 
@@ -248,7 +252,7 @@ export class DialoggraphComponent implements OnInit {
                     node.x = currentX;
                     node.y = currentY;
                     currentY += 100;
-					node.class = "optional-node";
+					//node.class = "optional-node";
                 }
             });
             currentY = 0;
@@ -258,6 +262,7 @@ export class DialoggraphComponent implements OnInit {
       
       this.graphElement.setNodes(currentnodes);
       this.graphElement.setEdges(this.edges);
+	  this.currentSetNodes = currentnodes;
 	  
 	  // optionale patterns müssen irgendwo gespeichert werden!
 	  const optionalNodeIds = this.optionalIds;
@@ -272,5 +277,24 @@ export class DialoggraphComponent implements OnInit {
           };
 	  }
 	  
+  }
+  
+  hideOptionalNodes(){
+	  const optionalNodeIds = this.optionalIds;
+	  if(this.currentlyHidden){
+		  this.graphElement.setEdges(this.edges);
+		  this.graphElement.setNodes(this.currentSetNodes);
+		  this.currentlyHidden = false;
+          this.hideOptionalNodeText = "hide optional nodes";		  
+	  }else{
+		  let visibleEdges = this.edges.filter(edge => !optionalNodeIds.includes(edge.source) && !optionalNodeIds.includes(edge.target));
+		  this.graphElement.setEdges(visibleEdges);		  
+		  let visibleNodes = this.currentSetNodes.filter(node => !optionalNodeIds.includes(node.id));
+		  this.graphElement.setNodes(visibleNodes);
+		  this.currentlyHidden = true;
+		  this.hideOptionalNodeText = "show optional nodes";
+		  
+	  }  
+	  this.graphElement.completeRender(false);
   }
 }

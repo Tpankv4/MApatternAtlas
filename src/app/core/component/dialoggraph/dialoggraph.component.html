@@ -1,6 +1,10 @@
 <ng-container>
 <div>
-<h1 mat-dialog-title ><span class="title" (click)="openLink()" >{{algoName}}</span></h1>
+<h1 mat-dialog-title ><span class="title" (click)="openLink()">{{algoName}}</span>
+	<button class="header-button" (click)="hideOptionalNodes()" mat-raised-button >
+		<i class="material-icons"></i> {{hideOptionalNodeText}}
+	</button>
+</h1>
 </div>
 <hr>
 <network-graph #graphWrapper
@@ -19,6 +23,10 @@
 opacity: 0.9;
 color: blue;
 cursor: pointer;
+}
+
+.header-button {
+align: end;
 }
 
 .node {
