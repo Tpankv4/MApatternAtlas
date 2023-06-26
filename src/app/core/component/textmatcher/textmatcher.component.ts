@@ -20,6 +20,9 @@ export class TextmatcherComponent implements OnInit {
 	extractedAlgorithmInformation = []; //array of arrays with extracted keywords
 	infos = [];
 	keyword_extractor: any;
+	
+	showMatchingResults = false;
+	resultAlgorithm: string;
 
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
@@ -42,11 +45,23 @@ export class TextmatcherComponent implements OnInit {
 					this.infos.push({name: algorithm.name, data: algodata});
 				});
 			}else{
-				//get storage data
+				//get storage data -> save relevant keywords in case http get fails
 			}
 		});
 		
-   }
+    }
+   
+    openLink(){
+		let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm);
+		if(alg.length > 0){	
+			window.open(alg[0].href, '_blank');
+		};
+    }
+	
+	resetText(){
+		this.showMatchingResults = false;
+		this.filter.setValue("");
+	}
   
     extractInformation() {
 		// todo:
@@ -112,45 +127,6 @@ export class TextmatcherComponent implements OnInit {
 		console.log("occurrences for each algorithm");
 		console.log(results);
 
-        /*
-	    const textToExtract = "The Deutsch algorithm (named after David Deutsch [1]), though having little to no practical use, was the first quantum algorithm to have a proven speed-up compared to any classical method. The well-known Deutsch-Josza algorithm [2] is an extension of this algorith, which generalizes the problem in order to achieve a super-exponential speed-up.";
-	    const textToExtract2 = "Quantum Annealing (QA) is a metaheuristic, which can be used for solving optimization problems or sampling from quantum distributions. At D-Wave Systems, this heuristic is implemented in hardware (so called quantum annealer), which takes the problem in form of a Quadratic Unconstrained Binary Optimization (QUBO) or Ising Model as input.";
-        let allTexts = [];
-	    allTexts.push({name: "Deutsch Algorithm", description: textToExtract});
-	    allTexts.push({name: "Quantum Annealing", description: textToExtract2});
-	  
-	    allTexts.forEach( textoftexts => {
-		    const extraction_result =
-	        this.keyword_extractor.extract(textoftexts.description,{
-			    language:"english",
-			    remove_digits: true,
-			    return_changed_case:true,
-			    remove_duplicates: false
-		    });
-	    console.log("extraction result:");
-	    console.log(extraction_result);
-	    this.extractedAlgorithmInformation.push({name: textoftexts.name, keywords: extraction_result});
-	    });
-	  
-	    const extraction_result_input =
-	        this.keyword_extractor.extract(this.filter.value,{
-			    language:"english",
-			    remove_digits: true,
-			    return_changed_case:true,
-			    remove_duplicates: false
-		    });
-			
-			//etwas abändern hier
-	    let similarites = [];
-	    this.extractedAlgorithmInformation.forEach( keywords => {
-		    let similarKeywords = extraction_result_input.filter(function(el) {
-		    return keywords.keywords.indexOf(el) >= 0;
-		    }); //.length hier falls notwendig
-		    similarites.push({name: keywords.name, matchingkeywords: similarKeywords});
-	    });
-	    console.log(similarites);
-	    //console.log(this.infos);
-		*/
 		let similarities = [];
 		const extraction_result_input =
 	        this.keyword_extractor.extract(this.filter.value,{
@@ -175,8 +151,10 @@ export class TextmatcherComponent implements OnInit {
 		const maximum = similarities.reduce(function(prev, current) {
 			return (prev.similarityvalue > current.similarityvalue) ? prev : current;
 		});
-		if(maximum > 0){
-			console.log(maximum);
+		if(maximum.similarityvalue > 0){
+			console.log(maximum.name);
+			this.showMatchingResults = true;
+			this.resultAlgorithm = maximum.name;
 		}else{
 			console.log("no similarities found!");
 		}

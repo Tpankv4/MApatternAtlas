@@ -1,8 +1,8 @@
 <ng-container>
-<button class="action-button-with-margin" (click)="openLink()" 
-          color="accent" mat-raised-button>
-    <i class="material-icons"></i> {{algoName}}
-</button>
+<div>
+<h1 mat-dialog-title ><span class="title" (click)="openLink()" >{{algoName}}</span></h1>
+</div>
+<hr>
 <network-graph #graphWrapper
     (onClickedNode)="handleNodeClickedEvent2($event)"
 	[ppGraphEventEmmiter]
@@ -12,6 +12,15 @@
     zoom="both">
 <svg #svg slot="graph">
 <style>
+.title {
+}
+
+.title:hover { 
+opacity: 0.9;
+color: blue;
+cursor: pointer;
+}
+
 .node {
 fill: aliceblue;
 opacity: 0.95;

@@ -1,16 +1,30 @@
-<div mat-dialog-content>
+<div mat-dialog-content *ngIf="!showMatchingResults">
 	<mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
 		<mat-label>Input the known Information</mat-label>
 		<textarea matInput placeholder="Type in information" [formControl]="filter"></textarea>
   </mat-form-field>
 </div>
+<div mat-dialog-content *ngIf="showMatchingResults">
+	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink()">{{resultAlgorithm}}</span> </p>  
+</div>
 <div mat-dialog-actions>
-    <button class="action-button-with-margin" (click)="extractInformation() "mat-raised-button >
-		<i class="material-icons"></i> start textmatching
-	</button>
-	<button mat-dialog-close class="action-button-with-margin" mat-raised-button >
+    <button mat-dialog-close class="action-button-with-margin" mat-raised-button >
 		<i class="material-icons"></i> close
 	</button>
+    <button class="action-button-with-margin" (click)="extractInformation() "mat-raised-button *ngIf="!showMatchingResults">
+		<i class="material-icons"></i> start textmatching
+	</button>
+	<button class="action-button-with-margin" (click)="resetText()" mat-raised-button *ngIf="showMatchingResults">
+		<i class="material-icons"></i> insert different text
+	</button>
 </div>
+<style>
+.resultLink {
+cursor: pointer;
+}
 
-
+.resultLink:hover {
+opacity: 0.9;
+color: blue;
+}
+</style>
