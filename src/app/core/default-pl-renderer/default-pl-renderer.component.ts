@@ -207,7 +207,8 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	//this.initializeAlgorithmPatternIds();
 	this.initializeAlgorithmPatternIds2();
 	let state = this.algoStateService.getAlgoState();
-	if((state != null) && (state != undefined)){
+	console.log(state);
+	if((state != null) && (state != undefined) && (state != "")){
 		this.selectedAlgorithm = state;
 		this.graphVisible = true;
 		this.addAlgoPatterns();

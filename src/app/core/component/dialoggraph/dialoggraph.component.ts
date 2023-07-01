@@ -64,15 +64,15 @@ export class DialoggraphComponent implements OnInit {
 	  window.open(url, '_blank');
   }
   
-  close(openAgain: any){
-	  this.dialogRef.close(openAgain);
+  close(result: any){
+	  this.dialogRef.close(result);
   }
   
   handleNodeClickedEvent2(event) {
     const node = event['detail']['node'];
     if (event['detail']['key'] === 'info2') {
-	  this.close(node);
-      return;
+	    this.close({node: node, algorithm: this.algoName});
+        return;
     }
 	return;
   }

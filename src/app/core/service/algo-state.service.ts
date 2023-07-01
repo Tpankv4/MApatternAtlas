@@ -7,19 +7,23 @@ export class AlgoStateService {
 
   private variableToStore: string = "AlgoState";
   private variableForAlgoData: string = "AlgoDataVar";
+  private tmpstore: string = "";
   constructor() { }
   
   saveAlgoState(algorithm: string){
-	  localStorage.setItem(this.variableToStore, algorithm);
+	  //localStorage.setItem(this.variableToStore, algorithm);
+	  this.tmpstore = algorithm;
   }
   
   getAlgoState() {
-	  let data = localStorage.getItem(this.variableToStore);
-	  return data;
+	  //let data = localStorage.getItem(this.variableToStore);
+	  //return data;
+	  return this.tmpstore;
   }
 
   clearAlgoState() {
-    localStorage.removeItem(this.variableToStore);
+    //localStorage.removeItem(this.variableToStore);
+	this.tmpstore = "";
   }
   
   saveAlgorithmData(data: any){

@@ -652,7 +652,9 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 		  if(result != null) {
 			  console.log(result);
 			  this.resetButtonClicked.emit(true);
-			  this.router.navigate(['./../..', 'pattern-languages', result.patternLanguageId, result.uri], { relativeTo: this.activatedRoute});
+			  //this.router.navigate(['./../..', 'pattern-languages', result.node.patternLanguageId, result.node.uri], { relativeTo: this.activatedRoute, 
+			  //                     queryParams: { dialog: 'true' , algorithm: result.algorithm}});
+			  this.router.navigate(['./../..', 'pattern-languages', result.node.patternLanguageId, result.node.uri], { relativeTo: this.activatedRoute});					   
 		  }else{
 			  this.resetButtonClicked.emit(false);
 		  }
