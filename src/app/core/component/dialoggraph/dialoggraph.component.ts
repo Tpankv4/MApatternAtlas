@@ -204,16 +204,29 @@ export class DialoggraphComponent implements OnInit {
 		//console.log(i);
 		tempnodes.forEach( node => {
 			let hasnoincomingedge = true;
+			let hasnooutgoingedge = true;
 			tempedges.forEach( edge => {
 				if(edge["target"] == node){
 					hasnoincomingedge = false;
 				}
 			});
 			if(hasnoincomingedge){
-				levelgraph.push({nodeid: node, level: i});
-				nodesToRemove.push(node);
+				tempedges.forEach( edge => {
+				    if(edge["source"] == node){
+					    hasnooutgoingedge = false;
+				    }
+			    });
+				//only first column adjusted
+				if(hasnooutgoingedge && i == 1){
+					levelgraph.push({nodeid: node, level: i});
+				    nodesToRemove.push(node);
+				}else{
+					levelgraph.unshift({nodeid: node, level: i});
+					nodesToRemove.push(node);
+				}
 			}
 		});
+		
 		nodesToRemove.forEach( node => {
 			tempedges = tempedges.filter( edge => edge["source"] != node);
 			let index = tempnodes.indexOf(node);

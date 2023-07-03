@@ -5,7 +5,9 @@
   </mat-form-field>
 </div>
 <div mat-dialog-content *ngIf="showMatchingResults">
-	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink()">{{resultAlgorithm}}</span> </p>  
+	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink(1)">{{resultAlgorithm}}</span> </p>  
+	<p>The best matching algorithm with cosine similarity for keyvalue is <span class="resultLink"(click)="openLink(2)">{{resultAlgorithm2}}</span></p>  
+	<p>The best matching algorithm with cosine similarity for the complete text is <span class="resultLink"(click)="openLink(3)">{{resultAlgorithm3}}</span> </p>  
 </div>
 <div mat-dialog-actions>
     <button mat-dialog-close class="action-button-with-margin" mat-raised-button >

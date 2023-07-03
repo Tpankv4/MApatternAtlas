@@ -23,6 +23,8 @@ export class TextmatcherComponent implements OnInit {
 	
 	showMatchingResults = false;
 	resultAlgorithm: string;
+	resultAlgorithm2: string
+	resultAlgorithm3: string;
 
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
@@ -51,11 +53,25 @@ export class TextmatcherComponent implements OnInit {
 		
     }
    
-    openLink(){
-		let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm);
-		if(alg.length > 0){	
-			window.open(alg[0].href, '_blank');
-		};
+    openLink(number){
+		if(number == 1){
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm);
+		    if(alg.length > 0){	
+			    window.open(alg[0].href, '_blank');
+		    };
+		}
+		if(number == 2){
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm2);
+		    if(alg.length > 0){	
+			    window.open(alg[0].href, '_blank');
+		    };
+		}
+		if(number == 3){
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm3);
+		    if(alg.length > 0){	
+			    window.open(alg[0].href, '_blank');
+		    };
+		}
     }
 	
 	resetText(){
@@ -126,6 +142,7 @@ export class TextmatcherComponent implements OnInit {
 		});
 		console.log("occurrences for each algorithm");
 		console.log(results);
+		
 
 		let similarities = [];
 		const extraction_result_input =
@@ -158,7 +175,139 @@ export class TextmatcherComponent implements OnInit {
 		}else{
 			console.log("no similarities found!");
 		}
+		
+		// cosine similarity with keywords
+		let sim = [];
+		results.forEach(alg => {
+			sim.push({name: alg.name, cosineSimilarity: this.textCosineSimilarity2(alg.occurrences, extraction_result_input)});
+		});
+		console.log("cosine similarity with keywords");
+		console.log(sim);
+		const maximumkey = sim.reduce(function(prev, current) {
+			return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
+		});
+		this.resultAlgorithm2 = maximumkey.name;
+		
+		//cosine similarity with text
+		let sim2 = this.calculateCosineSimilarity();
+		const maximumtext = sim2.reduce(function(prev, current) {
+			return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
+		});
+		this.resultAlgorithm3 = maximumtext.name;
 
-  }
+    }
+	
+	//-------------------------------------------------------- 
+	// https://sumn2u.medium.com/string-similarity-comparision-in-js-with-examples-4bae35f13968
+	
+	calculateCosineSimilarity(){
+		let cosinesimilarities = [];
+		this.infos.forEach(algorithminfo => {
+			let applicationareaskeywords2 = []; 
+			let problemtypeskeywords2 = [];
+			algorithminfo.data.applicationAreas.forEach(word => {
+				applicationareaskeywords2.push(word.label);
+				applicationareaskeywords2.push(word.label);
+				applicationareaskeywords2.push(word.label);
+				applicationareaskeywords2.push(word.label);
+			});
+			algorithminfo.data.problemTypes.forEach(word => {
+				problemtypeskeywords2.push(word.label);
+				problemtypeskeywords2.push(word.label);
+				problemtypeskeywords2.push(word.label);
+				problemtypeskeywords2.push(word.label);
+			});
+			let wordarray = algorithminfo.data.intent.concat(algorithminfo.data.intent).concat(algorithminfo.data.problem, algorithminfo.data.solution)
+			              .concat(applicationareaskeywords2, problemtypeskeywords2);
+			cosinesimilarities.push({name: algorithminfo.name, cosineSimilarity: this.textCosineSimilarity(wordarray, this.filter.value)});
+		});
+		console.log("cosinesimilarities for text:");
+		console.log(cosinesimilarities);
+		return cosinesimilarities;
+		
+	}
+  
+    termFreqMap(str) {
+        let words = str.split(' ');
+		//console.log(words);
+		//console.log("hier");
+        let termFreq = {};
+        words.forEach(function(w) {
+            termFreq[w] = (termFreq[w] || 0) + 1;
+        });
+		//console.log(termFreq);
+        return termFreq;
+    }
+	
+	termFreqMap2(array) {
+        //let words = str.split(' ');
+        let termFreq = {};
+        array.forEach(function(w) {
+            termFreq[w] = (termFreq[w] || 0) + 1;
+        });
+        return termFreq;
+    }
+
+    addKeysToDict(map, dict) {
+        for (let key in map) {
+            dict[key] = true;
+        }
+    }
+
+    termFreqMapToVector(map, dict) {
+        let termFreqVector = [];
+        for (let term in dict) {
+            termFreqVector.push(map[term] || 0);
+        }
+        return termFreqVector;
+    }
+
+    vecDotProduct(vecA, vecB) {
+        let product = 0;
+        for (let i = 0; i < vecA.length; i++) {
+            product += vecA[i] * vecB[i];
+        }
+        return product;
+    }
+
+    vecMagnitude(vec) {
+        let sum = 0;
+        for (let i = 0; i < vec.length; i++) {
+            sum += vec[i] * vec[i];
+        }
+        return Math.sqrt(sum);
+    }
+
+    cosineSimilarity(vecA, vecB) {
+        return this.vecDotProduct(vecA, vecB) / (this.vecMagnitude(vecA) * this.vecMagnitude(vecB));
+    }
+
+    textCosineSimilarity(strA, strB) {
+        let termFreqA = this.termFreqMap(strA);
+        let termFreqB = this.termFreqMap(strB);
+
+        let dict = {};
+        this.addKeysToDict(termFreqA, dict);
+        this.addKeysToDict(termFreqB, dict);
+
+        let termFreqVecA = this.termFreqMapToVector(termFreqA, dict);
+        let termFreqVecB = this.termFreqMapToVector(termFreqB, dict);
+
+        return this.cosineSimilarity(termFreqVecA, termFreqVecB);
+    }
+	
+	textCosineSimilarity2(occurences, input) {
+        //let termFreqA = this.termFreqMap2(occurences);
+        let termFreqB = this.termFreqMap2(input);
+
+        let dict = {};
+        this.addKeysToDict(occurences, dict);
+        this.addKeysToDict(termFreqB, dict);
+
+        let termFreqVecA = this.termFreqMapToVector(occurences, dict);
+        let termFreqVecB = this.termFreqMapToVector(termFreqB, dict);
+
+        return this.cosineSimilarity(termFreqVecA, termFreqVecB);
+    }
 
 }
