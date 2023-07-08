@@ -1,32 +1,38 @@
-<div mat-dialog-content *ngIf="!showMatchingResults">
+<div mat-dialog-content>
 	<mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
 		<mat-label>Input the known Information</mat-label>
 		<textarea matInput placeholder="Type in information" [formControl]="filter"></textarea>
   </mat-form-field>
 </div>
 <div mat-dialog-content *ngIf="showMatchingResults">
-	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink(1)">{{resultAlgorithm}}</span> </p>  
-	<p>The best matching algorithm with cosine similarity for keyvalue is <span class="resultLink"(click)="openLink(2)">{{resultAlgorithm2}}</span></p>  
-	<p>The best matching algorithm with cosine similarity for the complete text is <span class="resultLink"(click)="openLink(3)">{{resultAlgorithm3}}</span> </p>  
+	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink(1)">{{resultAlgorithm.name}}</span>. 
+	   The similarityvalue is <span class="similarityvalue">{{resultAlgorithm.similarityvalue}}</span></p>  
+	<p>The best matching algorithm with cosine similarity for keyvalue is <span class="resultLink"(click)="openLink(2)">{{resultAlgorithm2.name}}</span>.
+	   The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm2.cosineSimilarity}}</span> </p>  
+	<p>The best matching algorithm with cosine similarity for the complete text is <span class="resultLink"(click)="openLink(3)">{{resultAlgorithm3.name}}</span>.
+       The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm3.cosineSimilarity}}</span>	</p>  
 </div>
 <div mat-dialog-actions>
     <button mat-dialog-close class="action-button-with-margin" mat-raised-button >
 		<i class="material-icons"></i> close
 	</button>
-    <button class="action-button-with-margin" (click)="extractInformation() "mat-raised-button *ngIf="!showMatchingResults">
+    <button class="action-button-with-margin" (click)="extractInformation() "mat-raised-button>
 		<i class="material-icons"></i> start textmatching
-	</button>
-	<button class="action-button-with-margin" (click)="resetText()" mat-raised-button *ngIf="showMatchingResults">
-		<i class="material-icons"></i> insert different text
 	</button>
 </div>
 <style>
 .resultLink {
 cursor: pointer;
+color: blue;
 }
 
 .resultLink:hover {
 opacity: 0.9;
-color: blue;
+color: pink;
+text-decoration: underline;
+}
+
+.similarityvalue {
+color: red;
 }
 </style>

@@ -86,6 +86,14 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 				data: this.AlgorithmDataIds,
 		    },
 	  });
+	  
+	  dialogRef.afterClosed().subscribe(result => {
+		  if((result != null) && (result != undefined)) {	 
+		      this.selectedAlgorithm = result;
+			  this.addAlgoPatterns();
+			  //this.showAlgoPatterns(); uncomment if popup should show immediately
+          }
+      });		  
   }
   
   exportToJson() {
@@ -207,7 +215,6 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	//this.initializeAlgorithmPatternIds();
 	this.initializeAlgorithmPatternIds2();
 	let state = this.algoStateService.getAlgoState();
-	console.log(state);
 	if((state != null) && (state != undefined) && (state != "")){
 		this.selectedAlgorithm = state;
 		this.graphVisible = true;

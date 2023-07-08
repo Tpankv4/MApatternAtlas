@@ -16,15 +16,15 @@ import * as keyextract from 'keyword-extractor/lib/keyword_extractor';
 export class TextmatcherComponent implements OnInit {
 	
 	
-    filter: FormControl;
+    filter: FormControl; //umbenennen!
 	extractedAlgorithmInformation = []; //array of arrays with extracted keywords
 	infos = [];
 	keyword_extractor: any;
 	
 	showMatchingResults = false;
-	resultAlgorithm: string;
-	resultAlgorithm2: string
-	resultAlgorithm3: string;
+	resultAlgorithm: any;
+	resultAlgorithm2: any;
+	resultAlgorithm3: any;
 
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
@@ -52,32 +52,39 @@ export class TextmatcherComponent implements OnInit {
 		});
 		
     }
+	
+	closeDialog(algorithmName: string) {
+		this.dialogRef.close(algorithmName);
+	}
    
     openLink(number){
 		if(number == 1){
-			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm);
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm.name);
 		    if(alg.length > 0){	
-			    window.open(alg[0].href, '_blank');
+			    //window.open(alg[0].href, '_blank');
+				this.closeDialog(this.resultAlgorithm.name);
 		    };
 		}
 		if(number == 2){
-			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm2);
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm2.name);
 		    if(alg.length > 0){	
-			    window.open(alg[0].href, '_blank');
+			    //window.open(alg[0].href, '_blank');
+				this.closeDialog(this.resultAlgorithm2.name);
 		    };
 		}
 		if(number == 3){
-			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm3);
+			let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm3.name);
 		    if(alg.length > 0){	
-			    window.open(alg[0].href, '_blank');
+			    //window.open(alg[0].href, '_blank');
+				this.closeDialog(this.resultAlgorithm3.name);
 		    };
 		}
     }
 	
-	resetText(){
-		this.showMatchingResults = false;
-		this.filter.setValue("");
-	}
+	//resetText(){
+	//	this.showMatchingResults = false;
+	//	this.filter.setValue("");
+	//}
   
     extractInformation() {
 		// todo:
@@ -171,7 +178,7 @@ export class TextmatcherComponent implements OnInit {
 		if(maximum.similarityvalue > 0){
 			console.log(maximum.name);
 			this.showMatchingResults = true;
-			this.resultAlgorithm = maximum.name;
+			this.resultAlgorithm = maximum;
 		}else{
 			console.log("no similarities found!");
 		}
@@ -186,21 +193,21 @@ export class TextmatcherComponent implements OnInit {
 		const maximumkey = sim.reduce(function(prev, current) {
 			return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
 		});
-		this.resultAlgorithm2 = maximumkey.name;
+		this.resultAlgorithm2 = maximumkey;
 		
 		//cosine similarity with text
-		let sim2 = this.calculateCosineSimilarity();
+		let sim2 = this.calculateTextCosineSimilarity();
 		const maximumtext = sim2.reduce(function(prev, current) {
 			return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
 		});
-		this.resultAlgorithm3 = maximumtext.name;
+		this.resultAlgorithm3 = maximumtext;
 
     }
 	
 	//-------------------------------------------------------- 
 	// https://sumn2u.medium.com/string-similarity-comparision-in-js-with-examples-4bae35f13968
 	
-	calculateCosineSimilarity(){
+	calculateTextCosineSimilarity(){
 		let cosinesimilarities = [];
 		this.infos.forEach(algorithminfo => {
 			let applicationareaskeywords2 = []; 
