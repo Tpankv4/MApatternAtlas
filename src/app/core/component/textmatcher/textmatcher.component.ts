@@ -5,6 +5,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
+import {MatTableModule, MatTableDataSource} from '@angular/material/table';
+
 
 import * as keyextract from 'keyword-extractor/lib/keyword_extractor';
 
@@ -25,6 +27,16 @@ export class TextmatcherComponent implements OnInit {
 	resultAlgorithm: any;
 	resultAlgorithm2: any;
 	resultAlgorithm3: any;
+	
+	numbers = [1,3,5,10];
+	selectednumber = 3;
+	
+	tabledata = new MatTableDataSource([{name: "test", similarityvalue: 1}]); // initial value not needed
+	fulltabledata: any;
+	tabledata2 = new MatTableDataSource([{name: "test", cosineSimilarity: 1}]); // initial value not needed
+	fulltabledata2: any;
+	columnsToDisplay = ['name', 'similarityvalue'];
+	columnsToDisplay2 = ['name', 'cosineSimilarity'];
 
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
@@ -52,6 +64,11 @@ export class TextmatcherComponent implements OnInit {
 		});
 		
     }
+	
+	numberChanged() {
+		this.tabledata.data = this.fulltabledata.slice(0, this.selectednumber);
+		this.tabledata2.data = this.fulltabledata2.slice(0, this.selectednumber);
+	}
 	
 	closeDialog(algorithmName: string) {
 		this.dialogRef.close(algorithmName);
@@ -81,6 +98,13 @@ export class TextmatcherComponent implements OnInit {
 		}
     }
 	
+	openLink2(algname){
+		let alg = this.data.data.filter(algorithm => algorithm.name == algname);
+		    if(alg.length > 0){	
+			    //window.open(alg[0].href, '_blank');
+				this.closeDialog(algname);
+		    };
+	}
 	//resetText(){
 	//	this.showMatchingResults = false;
 	//	this.filter.setValue("");
@@ -168,13 +192,28 @@ export class TextmatcherComponent implements OnInit {
 			});
 		    similarities.push({name: alg.name, matchingkeywords: filterarray, similarityvalue: resultvalue});
 	    });
-		console.log("results");
+		
+		// sort for 3 highest
+		similarities.sort((a, b) => b.similarityvalue - a.similarityvalue);
+		
+		console.log("sorted results");
 		console.log(similarities);
+		this.tabledata.data = similarities;
+		this.fulltabledata = this.tabledata.data;
+		console.log(this.fulltabledata);
+		this.tabledata.data = this.fulltabledata.slice(0, this.selectednumber);
+		//this.tabledata.data = this.fulltabledata.filter( resultdata => {
+		//	return resultdata.slice(0, this.selectednumber);
+		//});
 		
 		//aktuell nur 1 als ergebniss, selbst wenn bei 2 die similarity gleich ist...
 		const maximum = similarities.reduce(function(prev, current) {
 			return (prev.similarityvalue > current.similarityvalue) ? prev : current;
 		});
+		
+		console.log(similarities[0].name);
+		
+		
 		if(maximum.similarityvalue > 0){
 			console.log(maximum.name);
 			this.showMatchingResults = true;
@@ -188,8 +227,16 @@ export class TextmatcherComponent implements OnInit {
 		results.forEach(alg => {
 			sim.push({name: alg.name, cosineSimilarity: this.textCosineSimilarity2(alg.occurrences, extraction_result_input)});
 		});
+		sim.sort((a, b) => b.cosineSimilarity - a.cosineSimilarity);
 		console.log("cosine similarity with keywords");
 		console.log(sim);
+		
+		this.tabledata2.data = sim;
+		this.fulltabledata2 = this.tabledata2.data;
+		console.log(this.fulltabledata2);
+		this.tabledata2.data = this.fulltabledata2.slice(0, this.selectednumber);
+		
+		
 		const maximumkey = sim.reduce(function(prev, current) {
 			return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
 		});

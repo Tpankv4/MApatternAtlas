@@ -99,6 +99,7 @@ import { PatternAtlasUiFeatureToggleModule } from './directives/pattern-atlas-ui
 import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.component';
 import { CreateAlgorithmComponent } from './component/create-algorithm/create-algorithm.component';
 import { TextmatcherComponent } from './component/textmatcher/textmatcher.component';
+import { MatTableModule } from '@angular/material/table'
 
 @NgModule({
   imports: [
@@ -133,6 +134,7 @@ import { TextmatcherComponent } from './component/textmatcher/textmatcher.compon
     MatChipsModule,
     MatCheckboxModule,
     MatSnackBarModule,
+	MatTableModule,
     PatternAtlasUiFeatureToggleModule
   ],
   exports: [

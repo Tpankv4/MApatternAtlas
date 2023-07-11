@@ -2,7 +2,7 @@
 	<mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
 		<mat-label>Input the known Information</mat-label>
 		<textarea matInput placeholder="Type in information" [formControl]="filter"></textarea>
-  </mat-form-field>
+    </mat-form-field>
 </div>
 <div mat-dialog-content *ngIf="showMatchingResults">
 	<p>The best matching algorithm for your description is <span class="resultLink"(click)="openLink(1)">{{resultAlgorithm.name}}</span>. 
@@ -11,6 +11,50 @@
 	   The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm2.cosineSimilarity}}</span> </p>  
 	<p>The best matching algorithm with cosine similarity for the complete text is <span class="resultLink"(click)="openLink(3)">{{resultAlgorithm3.name}}</span>.
        The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm3.cosineSimilarity}}</span>	</p>  
+</div>
+<div>
+	<mat-form-field *ngIf="showMatchingResults">
+		<mat-label>Number of displayed algorithms</mat-label>
+		<mat-select [(value)]="selectednumber" (selectionChange)="numberChanged()">
+			<mat-option *ngFor="let number of numbers" [value]="number">{{number}}</mat-option>
+		</mat-select>
+	</mat-form-field>
+</div>
+<div>
+	<mat-table #table [dataSource]="tabledata" *ngIf="showMatchingResults">
+		<ng-container matColumnDef="name">
+			<mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+			<mat-cell *matCellDef="let result"> <span class="resultLink"(click)="openLink2(result.name)">{{result.name}}</span> </mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="similarityvalue">
+			<mat-header-cell *matHeaderCellDef> Similarityvalue </mat-header-cell>
+			<mat-cell *matCellDef="let result"> {{result.similarityvalue}} </mat-cell>
+		</ng-container>
+		<!--ng-container matColumnDef="similarityvalue">
+			<th mat-header-cell *matHeaderCellDef> Similarityvalue </th>
+			<td mat-cell *matCellDef="let result"> {{result.similarityvalue}} </td>
+		</ng-container-->
+		<mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
+	</mat-table>
+</div>
+<div>
+	<mat-table #table [dataSource]="tabledata2" *ngIf="showMatchingResults">
+		<ng-container matColumnDef="name">
+			<mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+			<mat-cell *matCellDef="let result"> <span class="resultLink"(click)="openLink2(result.name)">{{result.name}}</span> </mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="cosineSimilarity">
+			<mat-header-cell *matHeaderCellDef> Cosine similarity </mat-header-cell>
+			<mat-cell *matCellDef="let result"> {{result.cosineSimilarity}} </mat-cell>
+		</ng-container>
+		<!--ng-container matColumnDef="similarityvalue">
+			<th mat-header-cell *matHeaderCellDef> Similarityvalue </th>
+			<td mat-cell *matCellDef="let result"> {{result.similarityvalue}} </td>
+		</ng-container-->
+		<mat-header-row *matHeaderRowDef="columnsToDisplay2"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: columnsToDisplay2"></mat-row>
+	</mat-table>
 </div>
 <div mat-dialog-actions>
     <button mat-dialog-close class="action-button-with-margin" mat-raised-button >
