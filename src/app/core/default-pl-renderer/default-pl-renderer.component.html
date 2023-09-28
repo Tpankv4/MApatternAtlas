@@ -42,17 +42,21 @@
           color="accent" mat-raised-button>
     <i class="material-icons">add_box</i> Add Algorithm
   </button>
-  <button class="action-button-with-margin" (click)="reloadGraph()" *ngIf="graphVisible"
+  <button class="action-button-with-margin" (click)="openDeleteAlgorithmDialog()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
-    <i class="material-icons">autorenew</i> Reformat
+    <i class="material-icons">add_box</i> Delete Algorithm
   </button>
   <button class="action-button-with-margin" (click)="exportToJson()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
-    <i class="material-icons">save</i> testdownload
+    <i class="material-icons">save</i> download
   </button>
   <button class="action-button-with-margin" (click)="openTextmatcherDialog()" *ngIf="graphVisible"
           color="accent" mat-raised-button>
     <i class="material-icons"></i> open textmatcher
+  </button>
+  <button class="action-button-with-margin" (click)="reloadGraph()" *ngIf="graphVisible"
+          color="accent" mat-raised-button>
+    <i class="material-icons">autorenew</i> Reformat
   </button>
 </pp-action-button-bar>
 

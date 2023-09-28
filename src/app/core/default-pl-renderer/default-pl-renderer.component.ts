@@ -31,6 +31,7 @@ import { UiFeatures } from '../directives/pattern-atlas-ui-repository-configurat
 import { saveAs } from "file-saver";
 import * as jsonData from '../../../assets/AlgoData.json';
 import { TextmatcherComponent } from '../component/textmatcher/textmatcher.component';
+import { DeleteAlgorithmComponent } from '../component/delete-algorithm/delete-algorithm.component';
 
 @Component({
   selector: 'pp-default-pl-renderer',
@@ -65,6 +66,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   showAlgoPopups = false;
   addAlgorithmDialog = false;
   jdata: any = jsonData;
+  previousTextmatcherData = [];
 
   constructor(private activatedRoute: ActivatedRoute,
               private cdr: ChangeDetectorRef,
@@ -84,22 +86,49 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  const dialogRef = this.dialog.open(TextmatcherComponent, {
 			data: {
 				data: this.AlgorithmDataIds,
+				prev: this.previousTextmatcherData,
 		    },
 	  });
 	  
 	  dialogRef.afterClosed().subscribe(result => {
-		  if((result != null) && (result != undefined)) {	 
-		      this.selectedAlgorithm = result;
+		  if((result != null) && (result != undefined)) {	
+		      this.selectedAlgorithm = result.algoname;
 			  this.addAlgoPatterns();
+			  this.previousTextmatcherData = [];
+			  this.previousTextmatcherData.push(result.prev);
 			  //this.showAlgoPatterns(); uncomment if popup should show immediately
           }
       });		  
   }
   
+  //only deleting one at the time possible
+  openDeleteAlgorithmDialog(){
+	  const dialogRef = this.dialog.open(DeleteAlgorithmComponent, {
+			data: {
+				algorithms: this.AlgorithmDataIds,
+		    },
+	  });
+	  
+	  dialogRef.afterClosed().subscribe(result => {
+		  if((result != null) && (result != undefined) && (result.length > 0)) {
+			  result.forEach(algorithm => {
+				  this.AlgorithmDataIds = this.AlgorithmDataIds.filter(algids => algids.name !== algorithm.name);
+			  });
+          }
+      });	
+	  
+	  //persistent in db speichern nach löschen
+	  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
+  }
+  
   exportToJson() {
-	  this.algoStateService.saveAlgorithmData(this.AlgorithmDataIds);
-	  let exportData = this.AlgorithmDataIds;
-	  return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
+	  //this.algoStateService.saveAlgorithmData(this.AlgorithmDataIds);
+	  //let exportData = this.AlgorithmDataIds;
+	  //return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
+	  
+	  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
+	  //const result = this.algoStateService.getAlgorithmData2(this.patternLanguageId);
+	  
   }
 
   showAlgoPatterns() {
@@ -148,8 +177,24 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   addNewAlgorithm(newalgorithm){
 	  if(newalgorithm != null){
 		  this.AlgorithmDataIds.push(newalgorithm);
+		  //persistent in db speichern nach hinzufügen
+		  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
 	  }
 	  this.addAlgorithmDialog = false;
+  }
+  
+  initializeAlgorithmPatternIds3(){
+	  this.algoStateService.getAlgorithmData2(this.patternLanguageId).subscribe(data => {
+		  this.AlgorithmDataIds = data.algodata;
+		  let state = this.algoStateService.getAlgoState();
+		  if((state != null) && (state != undefined) && (state != "")){
+			this.selectedAlgorithm = state;
+			this.graphVisible = true;
+			this.addAlgoPatterns();
+			this.showAlgoPatterns();
+		  }
+		  console.log(data);
+	  });
   }
   
   initializeAlgorithmPatternIds2(){
@@ -158,6 +203,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 		//  console.log(res);
           //this.AlgorithmDataIds = res;
     //});
+	console.log("json data");
 	console.log(this.jdata.default);
 	//this.AlgorithmDataIds = this.jdata.default;
 	if(this.algoStateService.getAlgorithmData() != null){
@@ -213,14 +259,17 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
     this.subscriptions.add(filterSubscription);
 	
 	//this.initializeAlgorithmPatternIds();
-	this.initializeAlgorithmPatternIds2();
-	let state = this.algoStateService.getAlgoState();
+	//this.initializeAlgorithmPatternIds2();
+	this.initializeAlgorithmPatternIds3();
+	
+	//in initialize verschoben!!!
+	/*let state = this.algoStateService.getAlgoState();
 	if((state != null) && (state != undefined) && (state != "")){
 		this.selectedAlgorithm = state;
 		this.graphVisible = true;
 		this.addAlgoPatterns();
 		this.showAlgoPatterns();
-    }
+    }*/
   }
 
   detectChanges() {

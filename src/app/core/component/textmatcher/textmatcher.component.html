@@ -57,11 +57,17 @@
 	</mat-table>
 </div>
 <div mat-dialog-actions>
-    <button mat-dialog-close class="action-button-with-margin" mat-raised-button >
+    <!--button mat-dialog-close class="action-button-with-margin" mat-raised-button >
+		<i class="material-icons"></i> close
+	</button-->
+	<button class="action-button-with-margin" (click)="closeDialog2()" mat-raised-button >
 		<i class="material-icons"></i> close
 	</button>
-    <button class="action-button-with-margin" (click)="extractInformation() "mat-raised-button>
+    <button class="action-button-with-margin" (click)="extractInformation(false) "mat-raised-button>
 		<i class="material-icons"></i> start textmatching
+	</button>
+	<button class="action-button-with-margin" (click)="extractInformation(true) "mat-raised-button>
+		<i class="material-icons"></i> start textmatching with rake
 	</button>
 </div>
 <style>

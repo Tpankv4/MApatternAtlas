@@ -45,6 +45,7 @@ export class CreateAlgorithmComponent implements OnInit {
 	  
   }
   
+  //remove!!! relic of old times (testing)
   extractInformation(){
 	  this.keyword_extractor = keyextract;
 	  const textToExtract = "The Deutsch algorithm (named after David Deutsch [1]), though having little to no practical use, was the first quantum algorithm to have a proven speed-up compared to any classical method. The well-known Deutsch-Josza algorithm [2] is an extension of this algorith, which generalizes the problem in order to achieve a super-exponential speed-up.";
@@ -84,6 +85,7 @@ export class CreateAlgorithmComponent implements OnInit {
 	  //console.log(this.infos);
   }
   
+  //eventuell nach erstellen direkt in database speichern!
   closeDialog() {
 	  if(this.res.length > 0){
 		  const result = { name: this.name, patterns: this.res , optional: this.opt, href: this.planqkref};

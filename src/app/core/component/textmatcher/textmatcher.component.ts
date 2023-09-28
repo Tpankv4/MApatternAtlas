@@ -6,9 +6,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
 import {MatTableModule, MatTableDataSource} from '@angular/material/table';
+import { Observable } from 'rxjs'
 
 
 import * as keyextract from 'keyword-extractor/lib/keyword_extractor';
+export interface Cat {
+		name: string
+	}
 
 @Component({
   selector: 'pp-textmatcher',
@@ -23,7 +27,8 @@ export class TextmatcherComponent implements OnInit {
 	infos = [];
 	keyword_extractor: any;
 	
-	showMatchingResults = false;
+	//showMatchingResults = false;
+	showMatchingResults: boolean;
 	resultAlgorithm: any;
 	resultAlgorithm2: any;
 	resultAlgorithm3: any;
@@ -41,13 +46,47 @@ export class TextmatcherComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
               @Inject(MAT_DIALOG_DATA) public data) { 
-			 
+			  //onbackground click bessere lösung...
+			  dialogRef.disableClose = true;
 			 
 	}
 
   
     ngOnInit(): void {
-	    this.filter = new FormControl('');
+		
+		this.showMatchingResults = false;
+		//eventuell noch on backgroud klick methode
+		console.log("this.data.prev.length");
+		console.log(this.data.prev.length);
+		if(this.data.prev.length > 0) {
+			this.resultAlgorithm = this.data.prev[0].resultAlgorithm;
+			this.resultAlgorithm2 = this.data.prev[0].resultAlgorithm2;
+			this.resultAlgorithm3 = this.data.prev[0].resultAlgorithm3;
+			this.tabledata = this.data.prev[0].tabledata;
+			this.tabledata2 = this.data.prev[0].tabledata2;
+			this.fulltabledata = this.data.prev[0].fulltabledata;
+			this.fulltabledata2 = this.data.prev[0].fulltabledata2;
+			this.columnsToDisplay = this.data.prev[0].columnsToDisplay;
+			this.columnsToDisplay2 = this.data.prev[0].columnsToDisplay2;
+			//this.filter.setValue(this.data.prev.filtervalue);
+			console.log("oldfiltervlaue:");
+			console.log(this.data.prev[0].filtervalue);
+			
+			//noch testen!
+			if (this.data.prev[0].filtervalue != ''){
+				this.filter = new FormControl(this.data.prev[0].filtervalue);
+				//this.filter.updateValueAndValidity();
+			}else{
+				this.filter = new FormControl('');
+			}
+			this.showMatchingResults = true;
+		}else{
+			this.filter = new FormControl('');
+		}
+		
+	    //this.filter = new FormControl('');
+		console.log("prev hier!");
+		console.log(this.data.prev);
 		
 		//let href = "https://platform.planqk.de/qc-catalog/algorithms/fae60bca-d2b6-4aa2-88b7-58caace34179";
 		let href = "https://platform.planqk.de/algorithms/fae60bca-d2b6-4aa2-88b7-58caace34179";
@@ -71,8 +110,38 @@ export class TextmatcherComponent implements OnInit {
 	}
 	
 	closeDialog(algorithmName: string) {
-		this.dialogRef.close(algorithmName);
+		let previous = {resultAlgorithm: this.resultAlgorithm,
+			resultAlgorithm2: this.resultAlgorithm2,
+			resultAlgorithm3: this.resultAlgorithm3,
+			tabledata: this.tabledata,
+			tabledata2: this.tabledata2,
+			fulltabledata: this.fulltabledata,
+			fulltabledata2: this.fulltabledata2,
+			columnsToDisplay: this.columnsToDisplay,
+			columnsToDisplay2: this.columnsToDisplay2,
+			filtervalue: this.filter.value,};
+		console.log(previous);
+			
+		this.dialogRef.close({algoname: algorithmName, prev: previous});
 	}
+	
+	//background klick noch machen!
+	closeDialog2() {
+		let previous = {resultAlgorithm: this.resultAlgorithm,
+			resultAlgorithm2: this.resultAlgorithm2,
+			resultAlgorithm3: this.resultAlgorithm3,
+			tabledata: this.tabledata,
+			tabledata2: this.tabledata2,
+			fulltabledata: this.fulltabledata,
+			fulltabledata2: this.fulltabledata2,
+			columnsToDisplay: this.columnsToDisplay,
+			columnsToDisplay2: this.columnsToDisplay2,
+			filtervalue: this.filter.value,};
+		console.log(previous);
+			
+		this.dialogRef.close({algoname: undefined, prev: previous});
+	}
+	
    
     openLink(number){
 		if(number == 1){
@@ -109,8 +178,53 @@ export class TextmatcherComponent implements OnInit {
 	//	this.showMatchingResults = false;
 	//	this.filter.setValue("");
 	//}
+	/*getAllCats() {
+			this.http.get('http://localhost:5070/api/cats').subscribe(data => {
+			console.log(data);
+			});
+        }
+	*/
+	
+	getAllCats(): Observable<Cat[]> {
+		return this.http.get<Cat[]>('http://localhost:8000/api/cats')
+	}
+	postdatatest(cat: Cat) {
+		return this.http.post<Cat>('http://localhost:8000/api/cats/', cat);
+	}
+	
+	//works with backend as intended :D
+	extractInformation2(isRake){
+		let datatosend = {input: this.filter.value, algodata: this.infos};
+		let url = 'http://localhost:8000/api/matcher/';
+		if(isRake){
+			url = url + 'rake/' 
+		}
+		this.http.post<any[]>(url, datatosend).subscribe(data => {
+			this.tabledata2.data = data;
+			this.fulltabledata2 = this.tabledata2.data;
+			console.log("tabledata");
+			console.log(this.fulltabledata2);
+			this.tabledata2.data = this.fulltabledata2.slice(0, this.selectednumber);
+		});
+	}
+
   
-    extractInformation() {
+    extractInformation(isRake) {
+		
+		this.postdatatest({name: "dieda"}).subscribe(data => {
+			console.log(data);
+		});
+		this.getAllCats().subscribe(data => {
+			console.log(data);
+		});
+		
+		//this.http.post('http://localhost:8000/api/matcher/', this.data.data).subscribe(data => {
+		//	console.log(data);
+		//});
+		this.extractInformation2(isRake);
+		
+		
+		
 		// todo:
 		//
 		// keywords: applicationAras, problem types -> iterate array arrayobject.label    noch learning methods?
@@ -231,10 +345,11 @@ export class TextmatcherComponent implements OnInit {
 		console.log("cosine similarity with keywords");
 		console.log(sim);
 		
-		this.tabledata2.data = sim;
-		this.fulltabledata2 = this.tabledata2.data;
-		console.log(this.fulltabledata2);
-		this.tabledata2.data = this.fulltabledata2.slice(0, this.selectednumber);
+		//this.tabledata2.data = sim;
+		//this.fulltabledata2 = this.tabledata2.data;
+		//console.log(this.fulltabledata2);
+		//this.tabledata2.data = this.fulltabledata2.slice(0, this.selectednumber);
+		
 		
 		
 		const maximumkey = sim.reduce(function(prev, current) {

@@ -99,7 +99,8 @@ import { PatternAtlasUiFeatureToggleModule } from './directives/pattern-atlas-ui
 import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.component';
 import { CreateAlgorithmComponent } from './component/create-algorithm/create-algorithm.component';
 import { TextmatcherComponent } from './component/textmatcher/textmatcher.component';
-import { MatTableModule } from '@angular/material/table'
+import { MatTableModule } from '@angular/material/table';
+import { DeleteAlgorithmComponent } from './component/delete-algorithm/delete-algorithm.component'
 
 @NgModule({
   imports: [
@@ -211,7 +212,8 @@ import { MatTableModule } from '@angular/material/table'
     FeatureToggleDialogComponent,
     DialoggraphComponent,
     CreateAlgorithmComponent,
-    TextmatcherComponent
+    TextmatcherComponent,
+    DeleteAlgorithmComponent
   ],
   entryComponents: [
     DefaultPlRendererComponent,
