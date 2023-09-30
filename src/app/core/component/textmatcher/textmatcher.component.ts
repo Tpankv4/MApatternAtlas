@@ -127,19 +127,23 @@ export class TextmatcherComponent implements OnInit {
 	
 	//background klick noch machen!
 	closeDialog2() {
-		let previous = {resultAlgorithm: this.resultAlgorithm,
-			resultAlgorithm2: this.resultAlgorithm2,
-			resultAlgorithm3: this.resultAlgorithm3,
-			tabledata: this.tabledata,
-			tabledata2: this.tabledata2,
-			fulltabledata: this.fulltabledata,
-			fulltabledata2: this.fulltabledata2,
-			columnsToDisplay: this.columnsToDisplay,
-			columnsToDisplay2: this.columnsToDisplay2,
-			filtervalue: this.filter.value,};
-		console.log(previous);
+		if((this.filter.value != '') && this.showMatchingResults){
+			let previous = {resultAlgorithm: this.resultAlgorithm,
+				resultAlgorithm2: this.resultAlgorithm2,
+				resultAlgorithm3: this.resultAlgorithm3,
+				tabledata: this.tabledata,
+				tabledata2: this.tabledata2,
+				fulltabledata: this.fulltabledata,
+				fulltabledata2: this.fulltabledata2,
+				columnsToDisplay: this.columnsToDisplay,
+				columnsToDisplay2: this.columnsToDisplay2,
+				filtervalue: this.filter.value,};
+			console.log(previous);
 			
-		this.dialogRef.close({algoname: undefined, prev: previous});
+			this.dialogRef.close({algoname: undefined, prev: previous});
+		}else{
+			this.dialogRef.close(null);
+		}
 	}
 	
    

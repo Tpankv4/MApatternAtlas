@@ -1,7 +1,10 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+	<mat-icon class="close-icon" >close</mat-icon>
+</button>
 <div mat-dialog-content>
 	<mat-form-field>
 		<mat-label>Algorithm Name</mat-label>
-        <input matInput [(ngModel)]="name">
+        <input matInput [(ngModel)]="name" cdkFocusInitial>
 	</mat-form-field>
 	<mat-form-field>
 		<mat-label>Select Patterns</mat-label>
@@ -19,20 +22,17 @@
 		<mat-label>href to PlanQK website</mat-label>
         <input matInput [(ngModel)]="planqkref">
 	</mat-form-field>
-	<mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
+	<!--mat-form-field id="type-field" class="action-button-with-margin" [floatLabel]="'always'">
 		<mat-label>Input the known Information</mat-label>
 		<textarea matInput placeholder="Type in information" [formControl]="filter"></textarea>
-  </mat-form-field>
+  </mat-form-field-->
 </div>
 <div mat-dialog-actions>
 	<button class="action-button-with-margin" (click)="closeDialog()" color="accent" mat-raised-button>
-		<i class="material-icons"></i> createAlgorithm
+		<i class="material-icons"></i> create Algorithm
 	</button>
 	<button mat-dialog-close class="action-button-with-margin" mat-raised-button >
 		<i class="material-icons"></i> close
-	</button>
-	<button class="action-button-with-margin" (click)="extractInformation()"mat-raised-button >
-		<i class="material-icons"></i> start textmatching
 	</button>
 </div>
 

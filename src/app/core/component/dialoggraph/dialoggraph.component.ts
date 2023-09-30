@@ -76,6 +76,16 @@ export class DialoggraphComponent implements OnInit {
     }
 	return;
   }
+  
+  //prevent edge changes
+  handleEdgeRemovedEvent(event){
+	  event.preventDefault();
+  }
+  
+  //prevent edge changes
+  handleEdgeAddedEvent(event){
+	  event.preventDefault();
+  }
 
   ngAfterContentInit() {
 	//let currentEdges2 = [].concat(this.edges);

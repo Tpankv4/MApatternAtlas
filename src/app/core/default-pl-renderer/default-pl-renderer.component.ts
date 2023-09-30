@@ -67,6 +67,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   addAlgorithmDialog = false;
   jdata: any = jsonData;
   previousTextmatcherData = [];
+  isQuantumComputingPatternLanguage = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private cdr: ChangeDetectorRef,
@@ -84,6 +85,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   
   openTextmatcherDialog(){
 	  const dialogRef = this.dialog.open(TextmatcherComponent, {
+		    width: "1000px",
 			data: {
 				data: this.AlgorithmDataIds,
 				prev: this.previousTextmatcherData,
@@ -104,6 +106,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   //only deleting one at the time possible
   openDeleteAlgorithmDialog(){
 	  const dialogRef = this.dialog.open(DeleteAlgorithmComponent, {
+		    width: "1000px",
 			data: {
 				algorithms: this.AlgorithmDataIds,
 		    },
@@ -123,10 +126,10 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   
   exportToJson() {
 	  //this.algoStateService.saveAlgorithmData(this.AlgorithmDataIds);
-	  //let exportData = this.AlgorithmDataIds;
-	  //return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
+	  let exportData = this.AlgorithmDataIds;
+	  return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
 	  
-	  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
+	  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
 	  //const result = this.algoStateService.getAlgorithmData2(this.patternLanguageId);
 	  
   }
@@ -197,6 +200,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  });
   }
   
+  //old datastorage via json file
   initializeAlgorithmPatternIds2(){
 	  //let url = './AlgoData.json';
 	  //this.http.get(url).subscribe(res => {
@@ -242,7 +246,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  const test = {name: "test",
 					   data: ["312bc9d3-26c0-40ae-b90b-56effd136c0d", "bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "1a5e3708-da39-4356-ab3f-115264da6390"]};
 	  this.AlgorithmDataIds.push(test);
-	  console.log("Complete Algorithm Data");
+	  console.log("Complete Algorithm Data for initial values");
 	  console.log(this.AlgorithmDataIds);
   }
   
@@ -258,18 +262,23 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(filterSubscription);
 	
-	//this.initializeAlgorithmPatternIds();
-	//this.initializeAlgorithmPatternIds2();
-	this.initializeAlgorithmPatternIds3();
-	
-	//in initialize verschoben!!!
-	/*let state = this.algoStateService.getAlgoState();
-	if((state != null) && (state != undefined) && (state != "")){
-		this.selectedAlgorithm = state;
-		this.graphVisible = true;
-		this.addAlgoPatterns();
-		this.showAlgoPatterns();
-    }*/
+	//only trigger extension for quantum computing patterns!
+	if(this.patternLanguageId === "af7780d5-1f97-4536-8da7-4194b093ab1d"){
+		
+		//get default values (in case database conection not possible)
+		this.initializeAlgorithmPatternIds();
+		//this.initializeAlgorithmPatternIds2();
+		let state = this.algoStateService.getAlgoState();
+		if((state != null) && (state != undefined) && (state != "")){
+			this.selectedAlgorithm = state;
+			this.graphVisible = true;
+			this.addAlgoPatterns();
+			this.showAlgoPatterns();
+		}
+		//get database values (overwrite default values)
+		this.initializeAlgorithmPatternIds3();
+		this.isQuantumComputingPatternLanguage = true;
+	}
   }
 
   detectChanges() {

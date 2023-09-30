@@ -635,6 +635,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	  }
 	  
 	  const dialogRef = this.matDialog.open(DialoggraphComponent, {
+		    autoFocus: false,
 			data: {
 		    nodes: nodecopy,
 			highlightedNodes: currentNodes,
@@ -649,7 +650,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	  });
 	  
 	  dialogRef.afterClosed().subscribe(result => {
-		  if(result != null) {
+		  if(result != null && result != undefined) {
 			  console.log(result);
 			  this.resetButtonClicked.emit(true);
 			  //this.router.navigate(['./../..', 'pattern-languages', result.node.patternLanguageId, result.node.uri], { relativeTo: this.activatedRoute, 
@@ -664,6 +665,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   
   private openCreateAlgorithm() {
 	  const dialogRef2 = this.matDialog.open(CreateAlgorithmComponent, {
+		    width: "1000px",
 			data: {
 		    patterns: this.patterns,
 		},

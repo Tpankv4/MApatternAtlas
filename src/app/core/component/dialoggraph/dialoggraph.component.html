@@ -1,4 +1,7 @@
 <ng-container>
+<button mat-icon-button class="close-button" (click)="close(null)">
+  <mat-icon class="close-icon" >close</mat-icon>
+</button>
 <div>
 <h1 mat-dialog-title ><span class="title" (click)="openLink()">{{algoName}}</span>
 	<button class="header-button" (click)="hideOptionalNodes()" mat-raised-button >
@@ -9,6 +12,8 @@
 <hr>
 <network-graph #graphWrapper
     (onClickedNode)="handleNodeClickedEvent2($event)"
+	(onRemovedEdge)="handleEdgeRemovedEvent($event)"
+	(onAddedEdge)="handleEdgeAddedEvent($event)"
 	[ppGraphEventEmmiter]
     classes=" highlighted-edge low-opacity-node low-opacity-edge optional-node"
     mode="layout"
@@ -27,6 +32,19 @@ cursor: pointer;
 
 .header-button {
 align: end;
+float: right;
+}
+
+.close-button{
+  float: right;
+  top:-24px;
+  right:-24px;
+}
+
+.close-button:hover{
+opacity: 0.9;
+color: red;
+cursor: pointer;
 }
 
 .node {
@@ -89,6 +107,7 @@ word-break: break-word;
     fill: blue;
     font-size: 12pt;
     text-overflow: ellipsis;
+	opacity: 0.1;
 
   }
 
@@ -145,4 +164,10 @@ data-link-handles="none" id="arrow">
 </defs>
 </svg>
 </network-graph>
+<!--hr>
+<div mat-dialog-actions>
+	<button mat-dialog-close class="action-button-with-margin" mat-raised-button >
+		<i class="material-icons"></i> close
+	</button>
+</div-->
 </ng-container>
