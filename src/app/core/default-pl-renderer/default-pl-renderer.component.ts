@@ -121,16 +121,12 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
       });	
 	  
 	  //persistent in db speichern nach löschen
-	  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
+	  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
   }
   
   exportToJson() {
-	  //this.algoStateService.saveAlgorithmData(this.AlgorithmDataIds);
 	  let exportData = this.AlgorithmDataIds;
 	  return saveAs(new Blob([JSON.stringify(exportData, null, 2)], { type: 'JSON' }), 'AlgoData.json');
-	  
-	  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
-	  //const result = this.algoStateService.getAlgorithmData2(this.patternLanguageId);
 	  
   }
 
@@ -151,8 +147,6 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  } else {
 		  console.log("currentAlgorithm gets data");
 		  const currentAlgorithm = this.AlgorithmDataIds.find(({name}) => name === this.selectedAlgorithm);
-		  //currentAlgorithm.data.forEach(nodeID => this.AlgoData.push(nodeID));
-		  //this.AlgoData = [].concat(this.AlgoData);
 		  this.AlgoData.push(currentAlgorithm);
 	  }
   }
@@ -181,7 +175,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  if(newalgorithm != null){
 		  this.AlgorithmDataIds.push(newalgorithm);
 		  //persistent in db speichern nach hinzufügen
-		  //this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
+		  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
 	  }
 	  this.addAlgorithmDialog = false;
   }

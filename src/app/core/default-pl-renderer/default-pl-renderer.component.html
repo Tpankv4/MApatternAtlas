@@ -16,12 +16,6 @@
   <mat-form-field class="algo-selector-class" appearance="outline" [floatLabel]="'always'" *ngIf="graphVisible && isQuantumComputingPatternLanguage">
 	<mat-label>Select an Algorithm</mat-label>
 	<mat-select [(value)]="selectedAlgorithm" (selectionChange)="addAlgoPatterns()">
-		<!--mat-option>None</mat-option>
-		<mat-option value="QuantumAnnealing">Quantum Annealing</mat-option>
-		<mat-option value="ReverseAnnealing">Reverse Annealing</mat-option>
-		<mat-option value="QuantumApproximateOptimizationAlgorithm">Quantum Approximate Optimization Algorithm</mat-option>
-		<mat-option value="DeutschAlgorithm">Deutsch Algorithm</mat-option>
-		<mat-option value="test">test</mat-option-->
 		<mat-option>None</mat-option>
 		<mat-option *ngFor="let algorithm of AlgorithmDataIds" [value]="algorithm.name">
             {{algorithm.name}}
@@ -29,11 +23,6 @@
 	</mat-select>
   </mat-form-field>
   
-  <!-- /pattern-languages/af7780d5-1f97-4536-8da7-4194b093ab1d taken from activatedRoute {{activatedRoute._routerState.snapshot.url}}>
-  <button class="action-button-with-margin" routerLink="/pattern-languages/af7780d5-1f97-4536-8da7-4194b093ab1d" [queryParams]="{dialog: true}" *ngIf="graphVisible"
-          color="accent" mat-raised-button>
-    <i class="material-icons">zoom_in</i> Show selected Algorithm
-  </button-->
   <button class="action-button-with-margin" (click)="showAlgoPatterns()" *ngIf="graphVisible && isQuantumComputingPatternLanguage"
           color="accent" mat-raised-button>
     <i class="material-icons">zoom_in</i> Show selected Algorithm

@@ -100,7 +100,7 @@ import { DialoggraphComponent } from './component/dialoggraph/dialoggraph.compon
 import { CreateAlgorithmComponent } from './component/create-algorithm/create-algorithm.component';
 import { TextmatcherComponent } from './component/textmatcher/textmatcher.component';
 import { MatTableModule } from '@angular/material/table';
-import { DeleteAlgorithmComponent } from './component/delete-algorithm/delete-algorithm.component'
+import { DeleteAlgorithmComponent } from './component/delete-algorithm/delete-algorithm.component';
 
 @NgModule({
   imports: [

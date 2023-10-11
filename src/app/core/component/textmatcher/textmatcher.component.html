@@ -72,6 +72,13 @@
 	<button class="action-button-with-margin" (click)="extractInformation(true) "mat-raised-button>
 		<i class="material-icons"></i> start textmatching with rake
 	</button>
+	<!--mat-checkbox class="example-margin" [(ngModel)]="myModel">
+		<label>Printer </label>
+	</mat-checkbox-->
+    <section class="testsection">
+	<input type="checkbox" class="example-margin" [checked]="checked" (change)="checkboxClicked($event)">use openAI
+	<!--mat-checkbox class="example-margin" checked="true">testbox2</mat-checkbox-->
+	</section>
 </div>
 <style>
 .resultLink {
@@ -88,4 +95,9 @@ text-decoration: underline;
 .similarityvalue {
 color: red;
 }
+
+.example-margin:hover {
+color: blue;
+}
+
 </style>

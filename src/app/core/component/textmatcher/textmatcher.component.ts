@@ -7,12 +7,13 @@ import {MatButtonModule} from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
 import {MatTableModule, MatTableDataSource} from '@angular/material/table';
 import { Observable } from 'rxjs'
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import * as keyextract from 'keyword-extractor/lib/keyword_extractor';
-export interface Cat {
-		name: string
-	}
+
+//export interface Cat {
+//		name: string
+//	}
 
 @Component({
   selector: 'pp-textmatcher',
@@ -26,6 +27,8 @@ export class TextmatcherComponent implements OnInit {
 	extractedAlgorithmInformation = []; //array of arrays with extracted keywords
 	infos = [];
 	keyword_extractor: any;
+	
+	checked = true;
 	
 	//showMatchingResults = false;
 	showMatchingResults: boolean;
@@ -103,6 +106,16 @@ export class TextmatcherComponent implements OnInit {
 		});
 		
     }
+	
+	checkboxClicked(event){
+		if(this.checked){
+			this.checked = false;
+			//console.log(this.checked);
+		}else{
+			this.checked = true;
+			//console.log(this.checked);
+		}
+	}
 	
 	numberChanged() {
 		this.tabledata.data = this.fulltabledata.slice(0, this.selectednumber);
@@ -182,26 +195,31 @@ export class TextmatcherComponent implements OnInit {
 	//	this.showMatchingResults = false;
 	//	this.filter.setValue("");
 	//}
+	
 	/*getAllCats() {
 			this.http.get('http://localhost:5070/api/cats').subscribe(data => {
 			console.log(data);
 			});
         }
 	*/
-	
+	/*
 	getAllCats(): Observable<Cat[]> {
 		return this.http.get<Cat[]>('http://localhost:8000/api/cats')
 	}
 	postdatatest(cat: Cat) {
 		return this.http.post<Cat>('http://localhost:8000/api/cats/', cat);
 	}
-	
+	*/
 	//works with backend as intended :D
 	extractInformation2(isRake){
 		let datatosend = {input: this.filter.value, algodata: this.infos};
 		let url = 'http://localhost:8000/api/matcher/';
 		if(isRake){
-			url = url + 'rake/' 
+			url = url + 'rake/';
+		}
+		
+		if(this.checked){
+			url = url + 'openai';
 		}
 		this.http.post<any[]>(url, datatosend).subscribe(data => {
 			this.tabledata2.data = data;
@@ -215,6 +233,7 @@ export class TextmatcherComponent implements OnInit {
   
     extractInformation(isRake) {
 		
+		/*
 		this.postdatatest({name: "dieda"}).subscribe(data => {
 			console.log(data);
 		});
@@ -225,6 +244,7 @@ export class TextmatcherComponent implements OnInit {
 		//this.http.post('http://localhost:8000/api/matcher/', this.data.data).subscribe(data => {
 		//	console.log(data);
 		//});
+		*/
 		this.extractInformation2(isRake);
 		
 		
