@@ -41,17 +41,6 @@ export class DialoggraphComponent implements OnInit {
 		  this.optionalIds = data.optionalNodeIds;
 		  this.algoName = data.name;
 		  this.href = data.href;
-		  
-		  // set level for each node
-		  /*
-          this.nodes.forEach(node => {
-            data.levelgraph.forEach( lnode => {
-              if(lnode.nodeid == node.id){
-                node.level = lnode.level;
-              }
-            });
-          });
-		  */
       }
   }
 
@@ -60,7 +49,6 @@ export class DialoggraphComponent implements OnInit {
   
   openLink(){
 	  let url = this.href;
-	  //let url = "https://platform.planqk.de/algorithms/786e1ff5-991e-428d-a538-b8b99bc3d175/";
 	  window.open(url, '_blank');
   }
   
@@ -88,19 +76,13 @@ export class DialoggraphComponent implements OnInit {
   }
 
   ngAfterContentInit() {
-	//let currentEdges2 = [].concat(this.edges);
 	let currentEdges2 = this.edges;
     let edgeInformation = this.edgeInformation;
-	console.log("edgeInformation");
-	console.log(edgeInformation);
-	console.log("alledges");
-	console.log(this.edges);
 	
 	const exceptionIds = ["05e07b55-83cf-4e7b-8212-a7a0e908139f", "a82ecee7-1a0d-4ba6-83b9-49b20b420047",
 	"dd5b2a19-a01a-4d26-b968-31b53d976815", "70f81341-8ca3-4f47-9ac6-2d598fa31617", "bf873faa-68a1-466d-b8d1-7cc3c5de2c05", "b15bb40f-ca2c-41d2-b16b-a4da29ad1598",
 	"39bd3758-fa63-4d44-bd98-95616134a39d", "9186fde3-7b56-43bc-8c60-d45a8405c473", "ef3d426f-0733-45b0-89ec-d2e81a607d16", "45cdc264-bb7d-40b9-9a98-d25e586fab15",
 	];
-	//const exceptionIds = [""];
 	
 	currentEdges2.forEach( edge => {
 		if(exceptionIds.includes(edge.id) == false){
@@ -120,63 +102,11 @@ export class DialoggraphComponent implements OnInit {
 	let edgesToRemove = [];
 	edgesToRemove.push("d82208b3-d9aa-454d-9489-d4f6bb43adde"); // entferne beidseitige realated to zwischen oracle und function table
 
+/*
           currentEdges2.forEach(edge => {
-			//console.log("currentegdes2");  
-            //console.log(edge);
-            //undefined???
             edgeInformation.forEach(node => {
-			  //console.log("edgeinformationinnen");	
-              //console.log(node);
               if(((node.nodeid == edge.source) || (node.nodeid == edge.target)) && this.highlightedNodes.includes(node.nodeid)) {
-                //console.log("komm ich hier rein?");
-                node.edges.forEach(edgedescription => {
-					/*
-                  if(edgedescription.edge.type == "refines") {
-                    console.log("swap here refines");
-                    let oldsource = edge.source;
-					let oldsourcehandle = edge.sourceHandle
-                    edge.source = edge.target;
-					edge.sourceHandle = edge.targetHandle;
-                    edge.target = oldsource;
-					edge.targetHandle = oldsourcehandle;
-                  }
-				  if(edgedescription.edge.type == "uses") {
-                    console.log("swap here uses");
-                    let oldsource = edge.source;
-					let oldsourcehandle = edge.sourceHandle
-                    edge.source = edge.target;
-					edge.sourceHandle = edge.targetHandle;
-                    edge.target = oldsource;
-					edge.targetHandle = oldsourcehandle;
-                  }
-				  if(edgedescription.edge.type == "canBeUsedWith") {
-                    console.log("swap here canbeusedwith");
-                    let oldsource = edge.source;
-					let oldsourcehandle = edge.sourceHandle;
-                    edge.source = edge.target;
-					edge.sourceHandle = edge.targetHandle;
-                    edge.target = oldsource;
-					edge.targetHandle = oldsourcehandle;
-                  }
-				  if(edgedescription.edge.type == "consistsOf") {
-                    console.log("swap here consistsOf");
-                    let oldsource = edge.source;
-					let oldsourcehandle = edge.sourceHandle
-                    edge.source = edge.target;
-					edge.sourceHandle = edge.targetHandle;
-                    edge.target = oldsource;
-					edge.targetHandle = oldsourcehandle;
-                  }
-				  if(edgedescription.edge.type == "dependsOn") {
-                    console.log("swap here dependson");
-                    let oldsource = edge.source;
-					let oldsourcehandle = edge.sourceHandle
-                    edge.source = edge.target;
-					edge.sourceHandle = edge.targetHandle;
-                    edge.target = oldsource;
-					edge.targetHandle = oldsourcehandle;
-                  }
-				  */
+                node.edges.forEach(edgedescription => {			
 				  if(edgedescription.edge.type == "isRelatedTo") {
 					  //edgesToRemove.push(edge.id);
 				  }
@@ -184,22 +114,18 @@ export class DialoggraphComponent implements OnInit {
               }
             });
           });
+		  */
 	
-	  //this.edges = currentEdges2;
-	  //this.edges = this.edges.map( edge => edge["id"] ? edge["id"] : edgeId(edge["id"]));
-	  console.log("edgesToRemove");
-	  console.log(edgesToRemove);
+	  //console.log("edgesToRemove");
+	  //console.log(edgesToRemove);
+	  //remove edges
 	  currentEdges2.forEach( edge => {
 		  if(edgesToRemove.includes(edge.id)){
 			  let index5 = currentEdges2.indexOf(edge);
 			  currentEdges2.splice(index5,1);
 		  }
 	  });
-	  console.log(currentEdges2);
-	  
-	  //console.log("swapped edges:");
 	  //console.log(currentEdges2);
-	  //console.log(this.edges);
 	  
 		 
       		 
@@ -208,10 +134,6 @@ export class DialoggraphComponent implements OnInit {
 	  let levelgraph = [];
 	  for (let i = 1; i <= this.highlightedNodes.length; i++){
 		let nodesToRemove = [];  
-		//console.log("in for schleife");
-		//console.log(tempnodes);
-		//console.log(tempedges);
-		//console.log(i);
 		tempnodes.forEach( node => {
 			let hasnoincomingedge = true;
 			let hasnooutgoingedge = true;
@@ -245,8 +167,8 @@ export class DialoggraphComponent implements OnInit {
 	  }
 	  //add remaining nodes (most likely because of cyclic dependencies)
 	  tempnodes.forEach(node => levelgraph.push({nodeid: node, level: 100}));
-	  console.log("Levelgraph:");
-	  console.log(levelgraph);
+	  //console.log("Levelgraph:");
+	  //console.log(levelgraph);
 	  this.nodes.forEach(node => {
 		  levelgraph.forEach( lnode => {
 			  if(lnode.nodeid == node.id){
@@ -259,9 +181,6 @@ export class DialoggraphComponent implements OnInit {
 	  let currentnodes = [];
 	  levelgraph.forEach(entry => currentnodes.push(entry.actualNode));
 	  
-	  console.log("check nodes");
-	  console.log(this.nodes);
-	  console.log(currentnodes);
 	  //create graph
 	  this.graphElement = this.graph.nativeElement;
         if (this.graphElement == null) {

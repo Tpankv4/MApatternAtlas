@@ -117,11 +117,11 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 			  result.forEach(algorithm => {
 				  this.AlgorithmDataIds = this.AlgorithmDataIds.filter(algids => algids.name !== algorithm.name);
 			  });
+			  //persistent in db speichern nach löschen
+			  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
           }
       });	
 	  
-	  //persistent in db speichern nach löschen
-	  this.algoStateService.saveAlgorithmData2(this.AlgorithmDataIds, this.patternLanguageId);
   }
   
   exportToJson() {
@@ -131,7 +131,7 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
 
   showAlgoPatterns() {
-	  console.log("inside showalgopatterns im default pl renderer");
+	  //console.log("inside showalgopatterns im default pl renderer");
 	  if((this.selectedAlgorithm == 'None')||(this.selectedAlgorithm == undefined)){
 		  this.showAlgoPopups = false;
 	  }else{
@@ -140,12 +140,12 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   addAlgoPatterns() {
-	  console.log("inside addalgopatterns im default pl renderer");
+	  //console.log("inside addalgopatterns im default pl renderer");
 	  this.AlgoData = []
 	  if ((this.selectedAlgorithm == 'None')||(this.selectedAlgorithm == undefined)) {	  
 		  this.AlgoData = [].concat(this.AlgoData);
 	  } else {
-		  console.log("currentAlgorithm gets data");
+		  //console.log("currentAlgorithm gets data");
 		  const currentAlgorithm = this.AlgorithmDataIds.find(({name}) => name === this.selectedAlgorithm);
 		  this.AlgoData.push(currentAlgorithm);
 	  }
@@ -158,7 +158,6 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
   }
   
   resetButtonValue(value){
-	  //console.log(value);
 	  if(value){
 		  this.algoStateService.saveAlgoState(this.selectedAlgorithm);
 	  }else{
@@ -190,7 +189,6 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 			this.addAlgoPatterns();
 			this.showAlgoPatterns();
 		  }
-		  console.log(data);
 	  });
   }
   
@@ -201,8 +199,8 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 		//  console.log(res);
           //this.AlgorithmDataIds = res;
     //});
-	console.log("json data");
-	console.log(this.jdata.default);
+	//console.log("json data");
+	//console.log(this.jdata.default);
 	//this.AlgorithmDataIds = this.jdata.default;
 	if(this.algoStateService.getAlgorithmData() != null){
 		this.AlgorithmDataIds = this.algoStateService.getAlgorithmData();
@@ -240,8 +238,8 @@ export class DefaultPlRendererComponent implements OnInit, OnDestroy {
 	  const test = {name: "test",
 					   data: ["312bc9d3-26c0-40ae-b90b-56effd136c0d", "bcd4c7a1-3c92-4f8c-a530-72b8b95d3750", "1a5e3708-da39-4356-ab3f-115264da6390"]};
 	  this.AlgorithmDataIds.push(test);
-	  console.log("Complete Algorithm Data for initial values");
-	  console.log(this.AlgorithmDataIds);
+	  //console.log("Complete Algorithm Data for initial values");
+	  //console.log(this.AlgorithmDataIds);
   }
   
   ngOnInit() {

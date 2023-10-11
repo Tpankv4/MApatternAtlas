@@ -222,10 +222,8 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 	if((this.AlgorithmData != null)||(this.AlgorithmData != undefined)){
 		if(this.AlgorithmData.length > 0){
 			if(this.graphNativeElement != undefined){
-				console.log("inside ngonchanges in graph-display component");
 				this.generateEdgeInformation();
 				this.showAlgorithmNode();
-				//this.resetButtonClicked.emit();
 			}else{
 				this.waitForNativeGraph = true;
 			}
@@ -515,7 +513,7 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
   }
   
   private showAlgorithmNode(){
-	  console.log("inside showAlgorithmNode");
+	  //console.log("inside showAlgorithmNode");
 	  this.highlightedEdgeIds = [];
 	  this.highlightedNodeIds = [];
 	  //this.edgeInformation = [];
@@ -526,98 +524,13 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 		const ingoingLinks = Array.from(this.graph.nativeElement.getEdgesBySource(element));
 		const tooManyEdges = [].concat(outgoingLinks).concat(ingoingLinks);
 		this.highlightedEdgeIds = this.highlightedEdgeIds.concat(tooManyEdges);
-		
-		/*
-		this.cpattern = this.patterns.find(pat => pat.id === element);
-		this.patternService.getPatternByUrl(this.cpattern._links.self.href).pipe(
-			switchMap((pattern: PatternResponse) => {
-				return this.patternRelationDescriptionService.getEdgesForPattern(pattern);
-			})).subscribe(edges => {
-				this.edgeInformation.push({
-					edges: edges,
-					nodeid: element,
-				});
-			});
-			*/
 	  });
-	  console.log("edgeinfos");
-	  console.log(this.edgeInformation);
 	  this.highlightedEdgeIds = this.highlightedEdgeIds.filter( edge => (this.highlightedNodeIds.includes(edge["source"])) && (this.highlightedNodeIds.includes(edge["target"])));
 	  this.highlightedEdgeIds = this.highlightedEdgeIds.filter((item, index) => this.highlightedEdgeIds.indexOf(item) === index);
 	  
 	  this.edgesToReverse = JSON.parse(JSON.stringify(this.highlightedEdgeIds));
-	  /*
-	  currentEdges2.forEach(edge => {
-		  console.log(edge);
-		  //undefined???
-	      console.log(edgeInformation[0]);
-		  edgeInformation.forEach(node => {
-			  console.log(node);
-			  if((node.nodeid == edge.source) || (node.nodeid == edge.target)) {
-				  console.log("komm ich hier rein?");
-				  node.edges.forEach(edgedescription => {
-					  if(edgedescription.edge.type == "refines") {
-						  console.log("swap here");
-						  let oldsource = edge.source;
-						  //edge["source"] = edge["target"];
-						  //edge["target"] = oldsource;
-						  edge.source = edge.target;
-						  edge.target = oldsource;
-					  }
-				  });
-			  }
-		  });
-	  });
-	  
-	  console.log(currentEdges2);
-	  */
-	  
-	  /*
-	  //tests hier
-	  let tempnodes = [].concat(this.highlightedNodeIds);
-	  let tempedges = [].concat(this.highlightedEdgeIds);
-	  console.log(this.highlightedEdgeIds);
-	  let levelgraph = [];
-	  for (let i = 1; i <= this.highlightedNodeIds.length; i++){
-		let nodesToRemove = [];  
-		console.log("in for schleife");
-		console.log(tempnodes);
-		console.log(tempedges);
-		console.log(i);
-		tempnodes.forEach( node => {
-			let hasnoincomingedge = true;
-			tempedges.forEach( edge => {
-				if(edge["target"] == node){
-					hasnoincomingedge = false;
-				}
-			});
-			if(hasnoincomingedge){
-				levelgraph.push({nodeid: node, level: i});
-				nodesToRemove.push(node);
-			}
-		});
-		nodesToRemove.forEach( node => {
-			tempedges = tempedges.filter( edge => edge["source"] != node);
-			let index = tempnodes.indexOf(node);
-			tempnodes.splice(index,1);
-		});
-	  }
-	  //add remaining nodes (most likely because of cyclic dependencies)
-	  tempnodes.forEach(node => levelgraph.push({nodeid: node, level: 100}));
-	  console.log("Levelgraph:");
-	  console.log(levelgraph);
-	  this.nodes.forEach(node => {
-		  levelgraph.forEach( lnode => {
-			  if(lnode.nodeid == node.id){
-				  node.level = lnode.level;
-				  lnode.actualNode = node;
-			  }
-		  });
-	  });
-	  */
+	
 	  this.highlightedEdgeIds = this.highlightedEdgeIds.map( edge => edge["id"] ? edge["id"] : edgeId(edge["id"]));
-	  console.log("hey edges überprüfen");
-	  console.log(this.edgesToReverse);
 	  
       this.triggerRerendering();
 	  if(this.showAlgoPopups){
@@ -653,8 +566,6 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
 		  if(result != null && result != undefined) {
 			  console.log(result);
 			  this.resetButtonClicked.emit(true);
-			  //this.router.navigate(['./../..', 'pattern-languages', result.node.patternLanguageId, result.node.uri], { relativeTo: this.activatedRoute, 
-			  //                     queryParams: { dialog: 'true' , algorithm: result.algorithm}});
 			  this.router.navigate(['./../..', 'pattern-languages', result.node.patternLanguageId, result.node.uri], { relativeTo: this.activatedRoute});					   
 		  }else{
 			  this.resetButtonClicked.emit(false);
@@ -706,9 +617,8 @@ export class GraphDisplayComponent implements AfterContentInit, OnChanges {
     const outgoingLinks = Array.from(this.graph.nativeElement.getEdgesByTarget(node.id));
     const ingoingLinks = Array.from(this.graph.nativeElement.getEdgesBySource(node.id));
 
-    console.log([].concat(outgoingLinks).concat(ingoingLinks));
+    //console.log([].concat(outgoingLinks).concat(ingoingLinks));
     this.highlightedEdgeIds = [].concat(outgoingLinks).concat(ingoingLinks).map((edge) => edge.id ? edge.id : edgeId(edge));
-	//console.log(this.highlightedEdgeIds);
     const outgoingNodeIds: string[] = outgoingLinks.map(it => it['source']);
     const ingoingNodeIds: string[] = ingoingLinks.map(it => it['target']);
 

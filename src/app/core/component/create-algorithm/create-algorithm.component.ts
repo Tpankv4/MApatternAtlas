@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,13 +17,10 @@ export class CreateAlgorithmComponent implements OnInit {
   res = [];
   opt = [];
   name: string;
-  //filter: FormControl;
   planqkref: string;
   
   infos: any;
   
-  
-  //todo: form control!
   
   constructor(public dialogRef: MatDialogRef<CreateAlgorithmComponent>,
               private http: HttpClient,
@@ -33,7 +29,6 @@ export class CreateAlgorithmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-	  //this.filter = new FormControl('');
 	  
 	  let href = "https://platform.planqk.de/qc-catalog/algorithms/fae60bca-d2b6-4aa2-88b7-58caace34179";
 	  this.http.get(href).subscribe(data => {
@@ -48,7 +43,6 @@ export class CreateAlgorithmComponent implements OnInit {
 		  this.dialogRef.close(result);
 	  } else {
 		  alert("no patterns selected!");
-		  //console.log(this.filter.value);
 	  }
   }
 

@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AlgoStateService {
 
+  //localstorage maybe not necessary anymore
   private variableToStore: string = "AlgoState";
   private variableForAlgoData: string = "AlgoDataVar";
   private tmpstore: string = "";
@@ -43,13 +44,9 @@ export class AlgoStateService {
 	  console.log(patternLanguageId);
 	  
 	  const url = this.repoEndpoint + '/patternForAlgorithm/' + patternLanguageId + '/saveData';
-	  //this.http.post<ArrayList>(url, data, { observe: 'response' }).pipe(
-		//catchError(this.handleError('dataerror', data))).subscribe(response => {
-		//	console.log(response);
-		//});
 		
 	  this.http.post<any>(url, data, { observe: 'response' }).subscribe(response => {
-		    console.log("response: ");
+		    console.log("response after save: ");
 			console.log(response);
 			console.log(response.status);
 		});
@@ -63,9 +60,6 @@ export class AlgoStateService {
   
   getAlgorithmData2(patternLanguageId: string){
 	  const url = this.repoEndpoint + '/patternForAlgorithm/' + patternLanguageId;
-	  /*this.http.get<any>(url).subscribe(response => {
-		return response.algodata;
-	  });*/
 	  return this.http.get<any>(url);
   }
   
