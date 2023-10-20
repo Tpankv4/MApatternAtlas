@@ -8,8 +8,8 @@
     </mat-form-field>
 </div>
 <div mat-dialog-content *ngIf="showMatchingResults">
-	<p>The best matching algorithm with cosine similarity is <span class="resultLink"(click)="openLink()">{{resultAlgorithm.name}}</span>.
-	   The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm.cosineSimilarity}}</span> </p>  
+	<p>The best matching algorithm with cosine similarity is <span class="resultLink"(click)="openLink()">{{resultAlgorithm.name}}</span>. </p>
+	<p>The Cosine Similarity is <span class="similarityvalue">{{resultAlgorithm.cosineSimilarity}}</span> </p>  
 </div>
 <div>
 	<mat-form-field *ngIf="showMatchingResults">
@@ -44,7 +44,7 @@
 		<i class="material-icons"></i> start textmatching with rake
 	</button>
     <section class="testsection">
-	<input type="checkbox" class="example-margin" [checked]="checked" (change)="checkboxClicked($event)">use openAI
+	<input type="checkbox" class="example-margin" [checked]="checked" (change)="checkboxClicked($event)">rephrase Problem using OpenAI
 	</section>
 </div>
 <style>
