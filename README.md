@@ -1,3 +1,5 @@
+Extended Version now on https://github.com/Tpankv4/QAIsup
+
 # PatternAtlas
 
 ## License
