@@ -17,7 +17,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 export class TextmatcherComponent implements OnInit {
 	
 	
-    filter: FormControl;
+    inputfield: FormControl;
 	extractedAlgorithmInformation = []; //array of arrays with extracted keywords
 	infos = [];
 	keyword_extractor: any;
@@ -30,9 +30,12 @@ export class TextmatcherComponent implements OnInit {
 	numbers = [1,3,5,10];
 	selectednumber = 3;
 	
-	tabledata = new MatTableDataSource([{name: "test", cosineSimilarity: 1}]); // initial value not needed
+	tabledata = new MatTableDataSource([{name: "test", cosineSimilarity: 1}]); // initial value
 	fulltabledata: any;
 	columnsToDisplay = ['name', 'cosineSimilarity'];
+	
+	rephrasedInput = "";
+	showRephrasedInput: boolean;
 
     constructor(public dialogRef: MatDialogRef<TextmatcherComponent>,
               private http: HttpClient,
@@ -46,21 +49,26 @@ export class TextmatcherComponent implements OnInit {
     ngOnInit(): void {
 		
 		this.showMatchingResults = false;
+		this.showRephrasedInput = false;
 
 		if(this.data.prev.length > 0) {
 			this.resultAlgorithm = this.data.prev[0].resultAlgorithm;
 			this.tabledata = this.data.prev[0].tabledata;
 			this.fulltabledata = this.data.prev[0].fulltabledata;
 			this.columnsToDisplay = this.data.prev[0].columnsToDisplay;
+			this.rephrasedInput = this.data.prev[0].rephrasedInput;
 			
-			if (this.data.prev[0].filtervalue != ''){
-				this.filter = new FormControl(this.data.prev[0].filtervalue);
+			if (this.data.prev[0].inputfieldvalue != ''){
+				this.inputfield = new FormControl(this.data.prev[0].inputfieldvalue);
 			}else{
-				this.filter = new FormControl('');
+				this.inputfield = new FormControl('');
 			}
 			this.showMatchingResults = true;
+			if(this.rephrasedInput != ""){
+				this.showRephrasedInput = true;
+			}
 		}else{
-			this.filter = new FormControl('');
+			this.inputfield = new FormControl('');
 		}
 		
 		
@@ -96,20 +104,20 @@ export class TextmatcherComponent implements OnInit {
 			tabledata: this.tabledata,
 			fulltabledata: this.fulltabledata,
 			columnsToDisplay: this.columnsToDisplay,
-			filtervalue: this.filter.value,};
-		console.log(previous);
+			inputfieldvalue: this.inputfield.value,
+			rephrasedInput: this.rephrasedInput,};
 			
 		this.dialogRef.close({algoname: algorithmName, prev: previous});
 	}
 	
 	closeDialog2() {
-		if((this.filter.value != '') && this.showMatchingResults){
+		if((this.inputfield.value != '') && this.showMatchingResults){
 			let previous = {resultAlgorithm: this.resultAlgorithm,
 				tabledata: this.tabledata,
 				fulltabledata: this.fulltabledata,
 				columnsToDisplay: this.columnsToDisplay,
-				filtervalue: this.filter.value,};
-			console.log(previous);
+				inputfieldvalue: this.inputfield.value,
+				rephrasedInput: this.rephrasedInput,};
 			
 			this.dialogRef.close({algoname: undefined, prev: previous});
 		}else{
@@ -119,7 +127,7 @@ export class TextmatcherComponent implements OnInit {
 	
    
     openLink(){
-		let alg = this.data.data.filter(algorithm => algorithm.name == this.resultAlgorithm.name);
+		let alg = this.data.data.inputfield(algorithm => algorithm.name == this.resultAlgorithm.name);
 		if(alg.length > 0){	
 			this.closeDialog(this.resultAlgorithm.name);
 		};
@@ -127,15 +135,15 @@ export class TextmatcherComponent implements OnInit {
     }
 	
 	openLink2(algname){
-		let alg = this.data.data.filter(algorithm => algorithm.name == algname);
+		let alg = this.data.data.inputfield(algorithm => algorithm.name == algname);
 		    if(alg.length > 0){	
 				this.closeDialog(algname);
 		    };
 	}
 
 	extractInformation(isRake){
-		let datatosend = {input: this.filter.value, algodata: this.infos};
-		let url = 'http://localhost:8000/api/matcher/';
+		let datatosend = {input: this.inputfield.value, algodata: this.infos};
+		let url = 'http://localhost:1985/api/matcher/';
 		if(isRake){
 			url = url + 'rake/';
 		}
@@ -143,19 +151,26 @@ export class TextmatcherComponent implements OnInit {
 		if(this.checked){
 			url = url + 'openai';
 		}
-		this.http.post<any[]>(url, datatosend).subscribe(data => {
-			this.tabledata.data = data;
+		this.rephrasedInput = "";
+		this.showRephrasedInput = false;
+		
+		this.http.post<any>(url, datatosend).subscribe(resultdata => {
+			this.tabledata.data = resultdata.result;
 			this.fulltabledata = this.tabledata.data;
-			console.log("tabledata");
+			console.log("tabledata:");
 			console.log(this.fulltabledata);
 			this.tabledata.data = this.fulltabledata.slice(0, this.selectednumber);
+			
+			if(resultdata.hasOwnProperty('rephrasedInput')){
+				this.rephrasedInput = resultdata.rephrasedInput;
+				this.showRephrasedInput = true;
+			}
 			
 			const maximumkey = this.fulltabledata.reduce(function(prev, current) {
 				return (prev.cosineSimilarity > current.cosineSimilarity) ? prev : current;
 			});
 			
 			if(maximumkey.cosineSimilarity > 0){
-				console.log(maximumkey.name);
 				this.showMatchingResults = true;
 				this.resultAlgorithm = maximumkey;
 			}else{
